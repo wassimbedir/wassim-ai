@@ -1,5 +1,5 @@
 /* =========================================================
-   WASSIM AI — CLEAN RESPONSIVE UI
+   WASSIM AI — FINAL RESPONSIVE UI
    ========================================================= */
 
 * {
@@ -65,7 +65,6 @@ button {
 .sidebar {
   width: 285px;
   flex: 0 0 285px;
-
   height: 100%;
 
   display: flex;
@@ -82,6 +81,7 @@ button {
 }
 
 .sidebar-header {
+  width: 100%;
   height: 64px;
   flex: 0 0 64px;
 
@@ -96,9 +96,9 @@ button {
 
 .logo {
   color: #f4f4f4;
-
   font-size: 19px;
   font-weight: 700;
+  direction: ltr;
 }
 
 .logo span {
@@ -119,6 +119,7 @@ button {
   color: #d4af37;
 
   font-size: 23px;
+  line-height: 1;
 }
 
 .new-chat:hover {
@@ -126,15 +127,20 @@ button {
 }
 
 
-/* SEARCH */
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 .search {
+  width: 100%;
   padding: 14px 14px 8px;
 }
 
 .search input {
   width: 100%;
   height: 42px;
+
+  display: block;
 
   padding: 0 13px;
 
@@ -147,6 +153,8 @@ button {
   color: #fff;
 
   font-size: 13px;
+
+  direction: rtl;
 }
 
 .search input::placeholder {
@@ -158,7 +166,9 @@ button {
 }
 
 
-/* CHATS */
+/* =========================================================
+   CHATS
+   ========================================================= */
 
 .chats {
   flex: 1;
@@ -178,10 +188,12 @@ button {
 }
 
 .chat {
+  width: 100%;
   min-height: 62px;
 
   display: flex;
   align-items: center;
+
   gap: 10px;
 
   padding: 9px 10px;
@@ -250,12 +262,17 @@ button {
   height: 28px;
   flex: 0 0 28px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   border-radius: 7px;
 
   background: transparent;
   color: #666;
 
   font-size: 18px;
+  line-height: 1;
 }
 
 .chat-menu:hover {
@@ -264,19 +281,25 @@ button {
 }
 
 
-/* FOOTER */
+/* =========================================================
+   SIDEBAR FOOTER
+   ========================================================= */
 
 .sidebar-footer {
+  width: 100%;
+
   padding: 12px;
 
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .account {
+  width: 100%;
   min-height: 52px;
 
   display: flex;
   align-items: center;
+
   gap: 10px;
 
   padding: 6px 8px;
@@ -293,11 +316,12 @@ button {
 
   border-radius: 50%;
 
-  background: linear-gradient(
-    135deg,
-    #d4af37,
-    #8e7020
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #8e7020
+    );
 
   color: #050505;
 
@@ -357,6 +381,7 @@ button {
 .topbar {
   width: 100%;
   height: 62px;
+  min-height: 62px;
   flex: 0 0 62px;
 
   display: flex;
@@ -396,6 +421,7 @@ button {
   color: #d4af37;
 
   font-size: 20px;
+  line-height: 1;
 }
 
 
@@ -405,6 +431,7 @@ button {
 
 .messages {
   flex: 1;
+  min-width: 0;
   min-height: 0;
 
   overflow-y: auto;
@@ -457,11 +484,12 @@ button {
 
   border-radius: 24%;
 
-  background: linear-gradient(
-    135deg,
-    #d4af37,
-    #927321
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #927321
+    );
 
   color: #050505;
 
@@ -494,7 +522,7 @@ button {
 
 
 /* =========================================================
-   INPUT
+   INPUT AREA
    ========================================================= */
 
 .input-area {
@@ -517,27 +545,34 @@ button {
   z-index: 20;
 }
 
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
 .input-wrapper {
   width: min(100%, 780px);
 
-  min-height: 56px;
+  min-height: 58px;
 
   margin: 0 auto;
 
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 
-  gap: 8px;
+  gap: 10px;
 
-  padding: 7px 7px 7px 14px;
+  padding: 7px 8px 7px 16px;
 
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 18px;
 
-  background: #101010;
+  background: #111;
 
   box-shadow:
-    0 10px 35px rgba(0, 0, 0, 0.3);
+    0 8px 30px rgba(0, 0, 0, 0.35);
+
+  direction: rtl;
 }
 
 .input-wrapper:focus-within {
@@ -545,17 +580,27 @@ button {
 
   box-shadow:
     0 0 0 3px rgba(212, 175, 55, 0.05),
-    0 10px 35px rgba(0, 0, 0, 0.35);
+    0 8px 30px rgba(0, 0, 0, 0.35);
 }
+
+
+/* =========================================================
+   TEXT INPUT
+   ========================================================= */
 
 .message-input {
   flex: 1;
+
+  width: 100%;
   min-width: 0;
 
-  min-height: 40px;
-  max-height: 140px;
+  height: 42px;
+  min-height: 42px;
+  max-height: 120px;
 
-  padding: 10px 4px;
+  display: block;
+
+  padding: 9px 4px;
 
   resize: none;
 
@@ -566,40 +611,74 @@ button {
 
   color: #fff;
 
+  font-family: Arial, "Tahoma", sans-serif;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 24px;
+
+  text-align: right;
+  direction: rtl;
 }
 
 .message-input::placeholder {
   color: #666;
+  opacity: 1;
 }
 
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
 .send-button {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+  min-height: 42px;
+
+  flex: 0 0 42px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border-radius: 12px;
 
-  background: linear-gradient(
-    135deg,
-    #d4af37,
-    #a98425
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #a98425
+    );
 
   color: #050505;
 
   font-size: 22px;
   font-weight: 900;
+
+  line-height: 1;
+
+  direction: ltr;
+
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.send-button:hover {
+  filter: brightness(1.08);
 }
 
 .send-button:active {
   transform: scale(0.95);
 }
+
+
+/* =========================================================
+   DISCLAIMER
+   ========================================================= */
 
 .disclaimer {
   width: min(100%, 780px);
@@ -611,7 +690,7 @@ button {
   color: #4f4f4f;
 
   font-size: 10px;
-  line-height: 1.4;
+  line-height: 14px;
 }
 
 
@@ -632,6 +711,24 @@ button {
 
 .overlay.show {
   display: block;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.18);
+  border-radius: 10px;
 }
 
 
@@ -666,6 +763,7 @@ button {
 
   .topbar {
     height: 58px;
+    min-height: 58px;
     flex-basis: 58px;
 
     padding: 0 12px;
@@ -710,26 +808,48 @@ button {
   .input-wrapper {
     min-height: 54px;
 
-    padding-left: 10px;
+    padding: 6px 6px 6px 12px;
+
+    gap: 8px;
 
     border-radius: 16px;
+  }
+
+  .message-input {
+    height: 40px;
+    min-height: 40px;
+
+    padding: 8px 3px;
+
+    font-size: 14px;
+    line-height: 24px;
   }
 
   .send-button {
     width: 38px;
     height: 38px;
+
+    min-width: 38px;
+    min-height: 38px;
+
     flex-basis: 38px;
+
+    border-radius: 11px;
+
+    font-size: 20px;
   }
 
   .disclaimer {
     margin-top: 5px;
+
     font-size: 9px;
+    line-height: 12px;
   }
 }
 
 
 /* =========================================================
-   SMALL PHONE
+   SMALL PHONES
    ========================================================= */
 
 @media (max-width: 380px) {
@@ -762,13 +882,14 @@ button {
 
 
 /* =========================================================
-   SHORT SCREEN
+   SHORT PHONES
    ========================================================= */
 
 @media (max-height: 680px) {
 
   .topbar {
     height: 52px;
+    min-height: 52px;
     flex-basis: 52px;
   }
 
@@ -799,4 +920,4 @@ button {
   .disclaimer {
     display: none;
   }
-     }
+   }
