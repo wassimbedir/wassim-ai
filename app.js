@@ -7,29 +7,29 @@ const messageInput = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 
 const messages = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
-
-const chatList = document.getElementById("chatList");
-const searchInput = document.getElementById("searchInput");
 const currentChat = document.getElementById("currentChat");
+
+const searchInput = document.getElementById("searchInput");
+const chatList = document.getElementById("chatList");
 
 
 /* =========================
-   MOBILE SIDEBAR
+   SIDEBAR
 ========================= */
 
 function openSidebar() {
   sidebar.classList.add("open");
   overlay.classList.add("show");
+  document.body.style.overflow = "hidden";
 }
 
 function closeSidebar() {
   sidebar.classList.remove("open");
   overlay.classList.remove("show");
+  document.body.style.overflow = "";
 }
 
 menuButton.addEventListener("click", openSidebar);
-
 overlay.addEventListener("click", closeSidebar);
 
 
@@ -52,22 +52,28 @@ newChatButton.addEventListener("click", () => {
         </h1>
 
         <p>
-          محادثة جديدة.
+          مساعدك الذكي للكتابة، التفكير، المعرفة، والإبداع.
           <br>
-          كيف يمكنني مساعدتك؟
+          ابدأ محادثة جديدة، ودع وسيم يرافقك.
         </p>
 
       </div>
     </div>
   `;
 
-  currentChat.textContent = "محادثة جديدة";
+  currentChat.textContent = "Wassim AI";
+
+  document
+    .querySelectorAll(".chat")
+    .forEach(chat => chat.classList.remove("active"));
 
   messageInput.value = "";
 
   closeSidebar();
 
-  messageInput.focus();
+  setTimeout(() => {
+    messageInput.focus();
+  }, 200);
 });
 
 
@@ -82,51 +88,70 @@ function sendMessage() {
   if (!text) return;
 
 
-  /* إزالة شاشة الترحيب */
+  const welcome = document.querySelector(".welcome");
 
-  const welcomeElement = document.querySelector(".welcome");
-
-  if (welcomeElement) {
-    welcomeElement.remove();
+  if (welcome) {
+    welcome.remove();
   }
 
 
-  /* رسالة المستخدم */
+  addMessage("user", text);
 
-  const userMessage = document.createElement("div");
+  messageInput.value = "";
 
-  userMessage.className = "message";
-
-  userMessage.innerHTML = `
-    <div class="message-avatar user-avatar">
-      W
-    </div>
-
-    <div class="message-content">
-
-      <div class="message-name">
-        أنت
-      </div>
-
-      <div>
-        ${escapeHTML(text)}
-      </div>
-
-    </div>
-  `;
-
-  messages.appendChild(userMessage);
+  scrollToBottom();
 
 
-  /* رد تجريبي */
+  /* رد مؤقت إلى أن نربط الـAI */
 
   setTimeout(() => {
 
-    const aiMessage = document.createElement("div");
+    addMessage(
+      "ai",
+      "أنا هنا. ✨<br><br>" +
+      "هذه الواجهة أصبحت جاهزة، والخطوة القادمة هي ربطها بعقل Wassim AI الحقيقي."
+    );
 
-    aiMessage.className = "message";
+    scrollToBottom();
 
-    aiMessage.innerHTML = `
+  }, 650);
+}
+
+
+/* =========================
+   ADD MESSAGE
+========================= */
+
+function addMessage(type, text) {
+
+  const message = document.createElement("div");
+
+  message.className = "message";
+
+
+  if (type === "user") {
+
+    message.innerHTML = `
+      <div class="message-avatar user-avatar">
+        W
+      </div>
+
+      <div class="message-content">
+
+        <div class="message-name">
+          أنت
+        </div>
+
+        <div>
+          ${escapeHTML(text)}
+        </div>
+
+      </div>
+    `;
+
+  } else {
+
+    message.innerHTML = `
       <div class="message-avatar ai-avatar">
         W
       </div>
@@ -138,24 +163,15 @@ function sendMessage() {
         </div>
 
         <div>
-          وصلت رسالتك. 🧠
-          <br><br>
-          أنا حاليًا في مرحلة البناء، وسيتم ربط الذكاء الاصطناعي الحقيقي في المرحلة القادمة.
+          ${text}
         </div>
 
       </div>
     `;
-
-    messages.appendChild(aiMessage);
-
-    scrollToBottom();
-
-  }, 500);
+  }
 
 
-  messageInput.value = "";
-
-  scrollToBottom();
+  messages.appendChild(message);
 }
 
 
@@ -167,67 +183,80 @@ sendButton.addEventListener("click", sendMessage);
 
 
 /* =========================
-   ENTER TO SEND
+   ENTER
 ========================= */
 
-messageInput.addEventListener("keydown", (event) => {
+messageInput.addEventListener("keydown", event => {
 
-  if (event.key === "Enter" && !event.shiftKey) {
+  if (
+    event.key === "Enter" &&
+    !event.shiftKey
+  ) {
 
     event.preventDefault();
 
     sendMessage();
-
   }
 
 });
 
 
 /* =========================
-   SEARCH CHATS
+   SEARCH
 ========================= */
 
 searchInput.addEventListener("input", () => {
 
-  const query = searchInput.value
-    .toLowerCase()
-    .trim();
+  const query =
+    searchInput.value
+      .trim()
+      .toLowerCase();
 
-  const chats = document.querySelectorAll(".chat");
+  document
+    .querySelectorAll(".chat")
+    .forEach(chat => {
 
-  chats.forEach(chat => {
+      const title =
+        chat
+          .querySelector(".chat-title")
+          ?.textContent
+          .toLowerCase() || "";
 
-    const title =
-      chat.querySelector(".chat-title")?.textContent
-      .toLowerCase() || "";
+      const preview =
+        chat
+          .querySelector(".chat-preview")
+          ?.textContent
+          .toLowerCase() || "";
 
-    const preview =
-      chat.querySelector(".chat-preview")?.textContent
-      .toLowerCase() || "";
+      const visible =
+        title.includes(query) ||
+        preview.includes(query);
 
-    const matches =
-      title.includes(query) ||
-      preview.includes(query);
+      chat.style.display =
+        visible ? "flex" : "none";
 
-    chat.style.display =
-      matches ? "flex" : "none";
-
-  });
+    });
 
 });
 
 
 /* =========================
-   CHAT SELECTION
+   SELECT CHAT
 ========================= */
 
-document.addEventListener("click", (event) => {
+chatList.addEventListener("click", event => {
 
-  const chat = event.target.closest(".chat");
+  const chat =
+    event.target.closest(".chat");
 
   if (!chat) return;
 
-  if (event.target.closest(".chat-menu")) {
+
+  /* لا نفتح المحادثة عند الضغط على ⋮ */
+
+  if (
+    event.target.closest(".chat-menu")
+  ) {
     return;
   }
 
@@ -238,42 +267,54 @@ document.addEventListener("click", (event) => {
       item.classList.remove("active");
     });
 
+
   chat.classList.add("active");
 
 
   const title =
-    chat.querySelector(".chat-title")?.textContent.trim();
+    chat
+      .querySelector(".chat-title")
+      ?.textContent
+      .trim();
+
 
   if (title) {
     currentChat.textContent = title;
   }
 
-  closeSidebar();
 
+  closeSidebar();
 });
 
 
 /* =========================
-   HELPERS
+   SCROLL
 ========================= */
 
 function scrollToBottom() {
 
-  const messageArea =
+  const area =
     document.querySelector(".messages");
 
-  messageArea.scrollTop =
-    messageArea.scrollHeight;
+  requestAnimationFrame(() => {
 
+    area.scrollTop =
+      area.scrollHeight;
+
+  });
 }
 
+
+/* =========================
+   SECURITY
+========================= */
 
 function escapeHTML(text) {
 
-  const div = document.createElement("div");
+  const element =
+    document.createElement("div");
 
-  div.textContent = text;
+  element.textContent = text;
 
-  return div.innerHTML;
-
-}
+  return element.innerHTML;
+       }
