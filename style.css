@@ -1,5 +1,5 @@
 /* =========================================================
-   WASSIM AI — FINAL RESPONSIVE UI
+   WASSIM AI — RESPONSIVE LITERARY UI
    ========================================================= */
 
 * {
@@ -20,9 +20,9 @@ html {
 
 body {
   overflow: hidden;
-  font-family: Arial, "Tahoma", sans-serif;
   background: #050505;
   color: #f5f5f5;
+  font-family: Arial, "Tahoma", sans-serif;
 }
 
 button,
@@ -51,7 +51,7 @@ button {
   background:
     radial-gradient(
       circle at 70% 15%,
-      rgba(212, 175, 55, 0.08),
+      rgba(212, 175, 55, 0.07),
       transparent 35%
     ),
     #050505;
@@ -119,7 +119,6 @@ button {
   color: #d4af37;
 
   font-size: 23px;
-  line-height: 1;
 }
 
 .new-chat:hover {
@@ -272,7 +271,6 @@ button {
   color: #666;
 
   font-size: 18px;
-  line-height: 1;
 }
 
 .chat-menu:hover {
@@ -362,8 +360,6 @@ button {
 
   overflow: hidden;
 
-  position: relative;
-
   background:
     radial-gradient(
       circle at 50% 35%,
@@ -421,12 +417,11 @@ button {
   color: #d4af37;
 
   font-size: 20px;
-  line-height: 1;
 }
 
 
 /* =========================================================
-   MESSAGES
+   MESSAGES AREA
    ========================================================= */
 
 .messages {
@@ -447,8 +442,9 @@ button {
   display: flex;
   flex-direction: column;
 
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+
+  padding: 10px 0 20px;
 }
 
 
@@ -458,6 +454,7 @@ button {
 
 .welcome {
   width: 100%;
+  min-height: 100%;
 
   display: flex;
   align-items: center;
@@ -506,428 +503,17 @@ button {
   color: #f5f5f5;
 
   font-size: clamp(28px, 4vw, 42px);
-  line-height: 1.2;
 }
 
 .welcome h1 span {
   color: #d4af37;
 }
 
-.welcome p {
-  color: #777;
-
-  font-size: clamp(13px, 1.8vw, 16px);
-  line-height: 1.8;
-}
-
-
-/* =========================================================
-   INPUT AREA
-   ========================================================= */
-
-.input-area {
-  width: 100%;
-  flex: 0 0 auto;
-
-  padding:
-    12px
-    clamp(12px, 3vw, 28px)
-    max(12px, env(safe-area-inset-bottom));
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(5, 5, 5, 0),
-      #050505 30%
-    );
-
-  position: relative;
-  z-index: 20;
-}
-
-
-/* =========================================================
-   INPUT WRAPPER
-   ========================================================= */
-
-.input-wrapper {
-  width: min(100%, 780px);
-
-  min-height: 58px;
-
-  margin: 0 auto;
-
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  padding: 7px 8px 7px 16px;
-
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 18px;
-
-  background: #111;
-
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.35);
-
-  direction: rtl;
-}
-
-.input-wrapper:focus-within {
-  border-color: rgba(212, 175, 55, 0.45);
-
-  box-shadow:
-    0 0 0 3px rgba(212, 175, 55, 0.05),
-    0 8px 30px rgba(0, 0, 0, 0.35);
-}
-
-
-/* =========================================================
-   TEXT INPUT
-   ========================================================= */
-
-.message-input {
-  flex: 1;
-
-  width: 100%;
-  min-width: 0;
-
-  height: 42px;
-  min-height: 42px;
-  max-height: 120px;
-
-  display: block;
-
-  padding: 9px 4px;
-
-  resize: none;
-
-  border: 0;
-  outline: 0;
-
-  background: transparent;
-
-  color: #fff;
-
-  font-family: Arial, "Tahoma", sans-serif;
-  font-size: 14px;
-  line-height: 24px;
-
-  text-align: right;
-  direction: rtl;
-}
-
-.message-input::placeholder {
-  color: #666;
-  opacity: 1;
-}
-
-
-/* =========================================================
-   SEND BUTTON
-   ========================================================= */
-
-.send-button {
-  width: 42px;
-  height: 42px;
-
-  min-width: 42px;
-  min-height: 42px;
-
-  flex: 0 0 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  border-radius: 12px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #d4af37,
-      #a98425
-    );
-
-  color: #050505;
-
-  font-size: 22px;
-  font-weight: 900;
-
-  line-height: 1;
-
-  direction: ltr;
-
-  transition:
-    transform 0.15s ease,
-    filter 0.15s ease;
-}
-
-.send-button:hover {
-  filter: brightness(1.08);
-}
-
-.send-button:active {
-  transform: scale(0.95);
-}
-
-
-/* =========================================================
-   DISCLAIMER
-   ========================================================= */
-
-.disclaimer {
-  width: min(100%, 780px);
-
-  margin: 7px auto 0;
-
-  text-align: center;
-
-  color: #4f4f4f;
-
-  font-size: 10px;
-  line-height: 14px;
-}
-
-
-/* =========================================================
-   OVERLAY
-   ========================================================= */
-
-.overlay {
-  display: none;
-
-  position: fixed;
-  inset: 0;
-
-  background: rgba(0, 0, 0, 0.65);
-
-  z-index: 90;
-}
-
-.overlay.show {
-  display: block;
-}
-
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(212, 175, 55, 0.18);
-  border-radius: 10px;
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 800px) {
-
-  .sidebar {
-    position: fixed;
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-
-    width: min(86vw, 320px);
-
-    transform: translateX(105%);
-
-    box-shadow:
-      -20px 0 50px rgba(0, 0, 0, 0.45);
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .menu-button {
-    display: flex;
-  }
-
-  .topbar {
-    height: 58px;
-    min-height: 58px;
-    flex-basis: 58px;
-
-    padding: 0 12px;
-  }
-
-  .current-chat {
-    font-size: 13px;
-  }
-
-  .messages {
-    padding: 12px;
-  }
-
-  .welcome {
-    padding: 16px 8px;
-  }
-
-  .welcome-logo {
-    width: 68px;
-    height: 68px;
-
-    margin-bottom: 18px;
-
-    font-size: 30px;
-  }
-
-  .welcome h1 {
-    font-size: 28px;
-  }
-
-  .welcome p {
-    font-size: 12px;
-  }
-
-  .input-area {
-    padding:
-      8px
-      10px
-      max(9px, env(safe-area-inset-bottom));
-  }
-
-  .input-wrapper {
-    min-height: 54px;
-
-    padding: 6px 6px 6px 12px;
-
-    gap: 8px;
-
-    border-radius: 16px;
-  }
-
-  .message-input {
-    height: 40px;
-    min-height: 40px;
-
-    padding: 8px 3px;
-
-    font-size: 14px;
-    line-height: 24px;
-  }
-
-  .send-button {
-    width: 38px;
-    height: 38px;
-
-    min-width: 38px;
-    min-height: 38px;
-
-    flex-basis: 38px;
-
-    border-radius: 11px;
-
-    font-size: 20px;
-  }
-
-  .disclaimer {
-    margin-top: 5px;
-
-    font-size: 9px;
-    line-height: 12px;
-  }
-}
-
-
-/* =========================================================
-   SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 380px) {
-
-  .welcome-logo {
-    width: 60px;
-    height: 60px;
-
-    margin-bottom: 15px;
-
-    font-size: 27px;
-  }
-
-  .welcome h1 {
-    font-size: 25px;
-  }
-
-  .welcome p {
-    font-size: 11px;
-  }
-
-  .input-wrapper {
-    min-height: 51px;
-  }
-
-  .disclaimer {
-    display: none;
-  }
-}
-
-
-/* =========================================================
-   SHORT PHONES
-   ========================================================= */
-
-@media (max-height: 680px) {
-
-  .topbar {
-    height: 52px;
-    min-height: 52px;
-    flex-basis: 52px;
-  }
-
-  .welcome-logo {
-    width: 54px;
-    height: 54px;
-
-    margin-bottom: 12px;
-
-    font-size: 25px;
-  }
-
-  .welcome h1 {
-    font-size: 24px;
-
-    margin-bottom: 7px;
-  }
-
-  .welcome p {
-    font-size: 11px;
-    line-height: 1.5;
-  }
-
-  .input-area {
-    padding-top: 6px;
-  }
-
-  .disclaimer {
-    display: none;
-  }
-   }
-/* =========================================================
-   LITERARY WELCOME
-   ========================================================= */
-
 .welcome-subtitle {
   margin-top: 2px;
+
   color: #d4af37;
+
   font-size: 16px;
   font-weight: 600;
   line-height: 1.6;
@@ -935,6 +521,7 @@ button {
 
 .welcome-description {
   max-width: 520px;
+
   margin: 8px auto 0;
 
   color: #777;
@@ -944,7 +531,9 @@ button {
 }
 
 
-/* QUICK ACTIONS */
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
 
 .quick-actions {
   width: min(100%, 650px);
@@ -1041,9 +630,397 @@ button {
 }
 
 
-/* MOBILE */
+/* =========================================================
+   CHAT MESSAGES
+   ========================================================= */
 
-@media (max-width: 600px) {
+.message {
+  width: 100%;
+
+  display: flex;
+
+  margin: 8px auto;
+
+  gap: 10px;
+
+  max-width: 900px;
+}
+
+
+/* USER — RIGHT */
+
+.message.user {
+  justify-content: flex-start;
+
+  flex-direction: row-reverse;
+
+  text-align: right;
+}
+
+
+/* AI — LEFT */
+
+.message.ai {
+  justify-content: flex-start;
+
+  flex-direction: row;
+
+  text-align: left;
+}
+
+
+/* AVATAR */
+
+.message-avatar {
+  width: 34px;
+  height: 34px;
+
+  min-width: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #8d701f
+    );
+
+  color: #050505;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+/* MESSAGE BODY */
+
+.message-content {
+  max-width: min(75%, 650px);
+
+  padding: 11px 14px;
+
+  border-radius: 16px;
+
+  font-size: 14px;
+  line-height: 1.8;
+
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+
+/* USER BUBBLE */
+
+.message.user .message-content {
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #a98425
+    );
+
+  color: #080808;
+
+  border-top-right-radius: 5px;
+
+  text-align: right;
+}
+
+
+/* AI RESPONSE */
+
+.message.ai .message-content {
+  background: #111;
+
+  color: #e9e9e9;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-top-left-radius: 5px;
+
+  text-align: left;
+}
+
+
+/* AI CONTENT WITH ARABIC */
+
+.message.ai .message-content {
+  direction: rtl;
+  text-align: right;
+}
+
+
+/* USER CONTENT */
+
+.message.user .message-content {
+  direction: rtl;
+  text-align: right;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input-area {
+  width: 100%;
+  flex: 0 0 auto;
+
+  padding:
+    12px
+    clamp(12px, 3vw, 28px)
+    max(12px, env(safe-area-inset-bottom));
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5,5,5,0),
+      #050505 30%
+    );
+
+  position: relative;
+  z-index: 20;
+}
+
+.input-wrapper {
+  width: min(100%, 780px);
+
+  min-height: 58px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 7px 8px 7px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+
+  background: #111;
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,0.35);
+
+  direction: rtl;
+}
+
+.input-wrapper:focus-within {
+  border-color: rgba(212,175,55,0.45);
+
+  box-shadow:
+    0 0 0 3px rgba(212,175,55,0.05),
+    0 8px 30px rgba(0,0,0,0.35);
+}
+
+.message-input {
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+
+  height: 42px;
+  min-height: 42px;
+  max-height: 120px;
+
+  display: block;
+
+  padding: 9px 4px;
+
+  resize: none;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-family: Arial, "Tahoma", sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+
+  text-align: right;
+  direction: rtl;
+}
+
+.message-input::placeholder {
+  color: #666;
+}
+
+.send-button {
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+  min-height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #a98425
+    );
+
+  color: #050505;
+
+  font-size: 22px;
+  font-weight: 900;
+
+  direction: ltr;
+}
+
+.send-button:active {
+  transform: scale(0.95);
+}
+
+.disclaimer {
+  width: min(100%, 780px);
+
+  margin: 7px auto 0;
+
+  text-align: center;
+
+  color: #4f4f4f;
+
+  font-size: 10px;
+  line-height: 14px;
+}
+
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.overlay {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0,0,0,0.65);
+
+  z-index: 90;
+}
+
+.overlay.show {
+  display: block;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212,175,55,0.18);
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .sidebar {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: min(86vw, 320px);
+
+    transform: translateX(105%);
+
+    box-shadow:
+      -20px 0 50px rgba(0,0,0,0.45);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .menu-button {
+    display: flex;
+  }
+
+  .topbar {
+    height: 58px;
+    min-height: 58px;
+    flex-basis: 58px;
+
+    padding: 0 12px;
+  }
+
+  .messages {
+    padding: 10px;
+  }
+
+  .message {
+    margin: 7px 0;
+  }
+
+  .message-content {
+    max-width: 82%;
+
+    padding: 10px 12px;
+
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .message-avatar {
+    width: 31px;
+    height: 31px;
+
+    min-width: 31px;
+  }
+
+  .welcome {
+    padding: 16px 8px;
+  }
+
+  .welcome-logo {
+    width: 68px;
+    height: 68px;
+
+    margin-bottom: 18px;
+
+    font-size: 30px;
+  }
+
+  .welcome h1 {
+    font-size: 28px;
+  }
 
   .welcome-subtitle {
     font-size: 14px;
@@ -1053,13 +1030,10 @@ button {
     max-width: 330px;
 
     font-size: 11px;
-    line-height: 1.7;
   }
 
   .quick-actions {
     margin-top: 20px;
-
-    grid-template-columns: 1fr 1fr;
 
     gap: 8px;
   }
@@ -1088,4 +1062,114 @@ button {
   .quick-action small {
     font-size: 8px;
   }
+
+  .input-area {
+    padding:
+      8px
+      10px
+      max(9px, env(safe-area-inset-bottom));
+  }
+
+  .input-wrapper {
+    min-height: 54px;
+
+    padding: 6px 6px 6px 12px;
+
+    gap: 8px;
+
+    border-radius: 16px;
+  }
+
+  .message-input {
+    height: 40px;
+    min-height: 40px;
+
+    padding: 8px 3px;
+
+    font-size: 14px;
+  }
+
+  .send-button {
+    width: 38px;
+    height: 38px;
+
+    min-width: 38px;
+    min-height: 38px;
+
+    flex-basis: 38px;
+
+    border-radius: 11px;
+
+    font-size: 20px;
+  }
+
+  .disclaimer {
+    margin-top: 5px;
+
+    font-size: 9px;
+    line-height: 12px;
+  }
 }
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .message-content {
+    max-width: 84%;
+
+    font-size: 12px;
+  }
+
+  .message-avatar {
+    width: 29px;
+    height: 29px;
+
+    min-width: 29px;
+  }
+
+  .disclaimer {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   SHORT PHONES
+   ========================================================= */
+
+@media (max-height: 680px) {
+
+  .topbar {
+    height: 52px;
+    min-height: 52px;
+    flex-basis: 52px;
+  }
+
+  .welcome-logo {
+    width: 54px;
+    height: 54px;
+
+    margin-bottom: 12px;
+
+    font-size: 25px;
+  }
+
+  .welcome h1 {
+    font-size: 24px;
+
+    margin-bottom: 7px;
+  }
+
+  .welcome p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .disclaimer {
+    display: none;
+  }
+   }
