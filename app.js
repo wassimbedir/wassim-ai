@@ -1,39 +1,57 @@
 /* =========================================================
-   WASSIM AI — AUTH + REAL LITERARY CHAT
-   GitHub Pages → Render API → Groq
+   WASSIM AI — APP
    ========================================================= */
 
 const API_URL = "https://wassim-ai-api.onrender.com";
 
+
 /* =========================================================
-   ELEMENTS
+   DOM
    ========================================================= */
 
 const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
 const menuButton = document.getElementById("menuButton");
 
 const newChatButton = document.getElementById("newChat");
 
+const chatList = document.getElementById("chatList");
+const searchInput = document.getElementById("searchInput");
+
+const messages = document.getElementById("messages");
+const welcomeScreen = document.getElementById("welcomeScreen");
+
 const messageInput = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
-const messages = document.getElementById("messages");
 
-const currentChat = document.getElementById("currentChat");
-const searchInput = document.getElementById("searchInput");
-const chatList = document.getElementById("chatList");
+const currentChatTitle = document.getElementById("currentChatTitle");
 
-/* AUTH */
+const accountName = document.getElementById("accountName");
+const accountMenu = document.getElementById("accountMenu");
+const accountDropdown = document.getElementById("accountDropdown");
+const logoutButton = document.getElementById("logoutButton");
+
+
+/* =========================================================
+   AUTH DOM
+   ========================================================= */
 
 const authOverlay = document.getElementById("authOverlay");
+
 const authForm = document.getElementById("authForm");
+
 const authUsername = document.getElementById("authUsername");
 const authPassword = document.getElementById("authPassword");
-const authSubmit = document.getElementById("authSubmit");
-const authSwitch = document.getElementById("authSwitch");
+
 const authTitle = document.getElementById("authTitle");
 const authSubtitle = document.getElementById("authSubtitle");
+
+const authSubmit = document.getElementById("authSubmit");
+
 const authError = document.getElementById("authError");
+
+const authSwitch = document.getElementById("authSwitch");
 
 
 /* =========================================================
@@ -41,217 +59,108 @@ const authError = document.getElementById("authError");
    ========================================================= */
 
 let conversationHistory = [];
+
 let conversationId = null;
 
 let isSending = false;
+
 let isRegisterMode = false;
 
 let token = localStorage.getItem("wassim_token");
+
 let currentUser = JSON.parse(
   localStorage.getItem("wassim_user") || "null"
 );
 
 
 /* =========================================================
-   SIDEBAR
-   ========================================================= */
-
-function openSidebar() {
-  sidebar?.classList.add("open");
-  overlay?.classList.add("show");
-  document.body.style.overflow = "hidden";
-}
-
-function closeSidebar() {
-  sidebar?.classList.remove("open");
-  overlay?.classList.remove("show");
-  document.body.style.overflow = "";
-}
-
-menuButton?.addEventListener("click", openSidebar);
-overlay?.addEventListener("click", closeSidebar);
-
-
-/* =========================================================
-   AUTH
+   AUTH UI
    ========================================================= */
 
 function showAuth() {
-  if (!authOverlay) return;
 
   authOverlay.style.display = "flex";
 
-  if (authUsername) {
-    authUsername.focus();
-  }
 }
+
 
 function hideAuth() {
-  if (!authOverlay) return;
 
   authOverlay.style.display = "none";
+
 }
+
 
 function setAuthMode(registerMode) {
+
   isRegisterMode = registerMode;
 
-  if (authTitle) {
-    authTitle.textContent = registerMode
-      ? "إنشاء حساب"
-      : "تسجيل الدخول";
-  }
+  authError.textContent = "";
 
-  if (authSubtitle) {
-    authSubtitle.textContent = registerMode
-      ? "أنشئ مساحتك الأدبية الخاصة."
-      : "ادخل إلى مساحتك الأدبية.";
-  }
+  authForm.reset();
 
-  if (authSubmit) {
-    authSubmit.textContent = registerMode
-      ? "إنشاء الحساب"
-      : "دخول";
-  }
+  if (isRegisterMode) {
 
-  if (authSwitch) {
-    authSwitch.textContent = registerMode
-      ? "لديك حساب؟ تسجيل الدخول"
-      : "ليس لديك حساب؟ إنشاء حساب";
-  }
+    authTitle.textContent = "إنشاء حساب";
 
-  if (authError) {
-    authError.textContent = "";
-  }
+    authSubtitle.textContent =
+      "أنشئ مساحتك الأدبية واحتفظ بمحادثاتك.";
 
-  if (authPassword) {
-    authPassword.value = "";
+    authSubmit.textContent =
+      "إنشاء الحساب";
+
+    authSwitch.textContent =
+      "لديك حساب بالفعل؟ تسجيل الدخول";
+
+  } else {
+
+    authTitle.textContent =
+      "تسجيل الدخول";
+
+    authSubtitle.textContent =
+      "ادخل إلى مساحتك الأدبية.";
+
+    authSubmit.textContent =
+      "دخول";
+
+    authSwitch.textContent =
+      "ليس لديك حساب؟ إنشاء حساب";
   }
 }
 
-authSwitch?.addEventListener("click", () => {
-  setAuthMode(!isRegisterMode);
-});
+
+authSwitch.addEventListener(
+  "click",
+  () => {
+
+    setAuthMode(!isRegisterMode);
+
+  }
+);
 
 
 /* =========================================================
-   LOGIN / REGISTER
+   API FETCH
    ========================================================= */
 
-authForm?.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const username = authUsername?.value.trim();
-  const password = authPassword?.value;
-
-  if (!username || !password) {
-    authError.textContent = "أدخل اسم المستخدم وكلمة المرور.";
-    return;
-  }
-
-  authSubmit.disabled = true;
-  authError.textContent = "";
-
-  try {
-
-    const endpoint = isRegisterMode
-      ? "/register"
-      : "/login";
-
-    const response = await fetch(`${API_URL}${endpoint}`, {
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        username,
-        password
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.error || "حدث خطأ أثناء العملية."
-      );
-    }
-
-    /*
-      بعض الـ APIs قد تعيد token مباشرة
-      وبعضها قد تستخدم access_token
-    */
-
-    const receivedToken =
-      data.token ||
-      data.access_token;
-
-    if (!receivedToken) {
-      throw new Error(
-        "تمت العملية لكن لم يصل رمز الدخول من الخادم."
-      );
-    }
-
-    token = receivedToken;
-
-    currentUser = {
-      id: data.user?.id || null,
-      username:
-        data.user?.username ||
-        username
-    };
-
-    localStorage.setItem(
-      "wassim_token",
-      token
-    );
-
-    localStorage.setItem(
-      "wassim_user",
-      JSON.stringify(currentUser)
-    );
-
-    hideAuth();
-
-    authForm.reset();
-
-    setAuthMode(false);
-
-    await loadConversations();
-
-    welcomeScreen();
-
-  } catch (error) {
-
-    console.error(error);
-
-    authError.textContent =
-      error.message ||
-      "تعذر الاتصال بالخادم.";
-
-  } finally {
-
-    authSubmit.disabled = false;
-
-  }
-});
-
-
-/* =========================================================
-   API HELPER
-   ========================================================= */
-
-async function apiFetch(endpoint, options = {}) {
+async function apiFetch(
+  endpoint,
+  options = {}
+) {
 
   const headers = {
+    "Content-Type": "application/json",
     ...(options.headers || {})
   };
 
+
   if (token) {
+
     headers.Authorization =
       `Bearer ${token}`;
+
   }
+
 
   const response = await fetch(
     `${API_URL}${endpoint}`,
@@ -261,50 +170,301 @@ async function apiFetch(endpoint, options = {}) {
     }
   );
 
-  if (response.status === 401) {
 
-    logout(false);
+  let data = null;
+
+  try {
+
+    data = await response.json();
+
+  } catch {
+
+    data = {};
+
+  }
+
+
+  if (!response.ok) {
+
+    if (
+      response.status === 401 ||
+      response.status === 403
+    ) {
+
+      logout(false);
+
+    }
+
 
     throw new Error(
-      "انتهت جلسة الدخول. سجّل الدخول من جديد."
+      data.error ||
+      data.message ||
+      "حدث خطأ في الاتصال."
     );
   }
 
-  return response;
+
+  return data;
 }
 
 
 /* =========================================================
-   LOAD CONVERSATIONS
+   LOGIN / REGISTER
+   ========================================================= */
+
+authForm.addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+    const username =
+      authUsername.value.trim();
+
+    const password =
+      authPassword.value;
+
+
+    if (!username || !password) {
+
+      authError.textContent =
+        "أدخل اسم المستخدم وكلمة المرور.";
+
+      return;
+    }
+
+
+    authSubmit.disabled = true;
+
+    authError.textContent = "";
+
+
+    try {
+
+      const endpoint =
+        isRegisterMode
+          ? "/register"
+          : "/login";
+
+
+      const data =
+        await apiFetch(
+          endpoint,
+          {
+            method: "POST",
+
+            body: JSON.stringify({
+              username,
+              password
+            })
+          }
+        );
+
+
+      token = data.token;
+
+      currentUser =
+        data.user || {
+          username
+        };
+
+
+      localStorage.setItem(
+        "wassim_token",
+        token
+      );
+
+
+      localStorage.setItem(
+        "wassim_user",
+        JSON.stringify(currentUser)
+      );
+
+
+      updateAccount();
+
+
+      hideAuth();
+
+      await loadConversations();
+
+      newChat();
+
+
+    } catch (error) {
+
+      authError.textContent =
+        error.message ||
+        "تعذر إتمام العملية.";
+
+    } finally {
+
+      authSubmit.disabled = false;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   ACCOUNT
+   ========================================================= */
+
+function updateAccount() {
+
+  if (!currentUser) return;
+
+
+  accountName.textContent =
+    currentUser.username ||
+    "Wassim";
+}
+
+
+accountMenu.addEventListener(
+  "click",
+  () => {
+
+    accountDropdown.classList.toggle(
+      "open"
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  "click",
+  (event) => {
+
+    if (
+      !accountMenu.contains(event.target) &&
+      !accountDropdown.contains(event.target)
+    ) {
+
+      accountDropdown.classList.remove(
+        "open"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function logout(showLogin = true) {
+
+  token = null;
+
+  currentUser = null;
+
+  conversationId = null;
+
+  conversationHistory = [];
+
+
+  localStorage.removeItem(
+    "wassim_token"
+  );
+
+  localStorage.removeItem(
+    "wassim_user"
+  );
+
+
+  accountName.textContent =
+    "Wassim";
+
+
+  chatList.innerHTML = "";
+
+  showWelcome();
+
+  if (showLogin) {
+
+    setAuthMode(false);
+
+    showAuth();
+
+  }
+}
+
+
+logoutButton.addEventListener(
+  "click",
+  () => {
+
+    logout(true);
+
+  }
+);
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+function openSidebar() {
+
+  sidebar.classList.add("open");
+
+  sidebarOverlay.classList.add("open");
+
+}
+
+
+function closeSidebar() {
+
+  sidebar.classList.remove("open");
+
+  sidebarOverlay.classList.remove("open");
+
+}
+
+
+menuButton.addEventListener(
+  "click",
+  openSidebar
+);
+
+
+sidebarOverlay.addEventListener(
+  "click",
+  closeSidebar
+);
+
+
+/* =========================================================
+   CONVERSATIONS
    ========================================================= */
 
 async function loadConversations() {
 
   if (!token) return;
 
+
   try {
 
-    const response =
-      await apiFetch("/conversations");
-
     const data =
-      await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.error ||
-        "تعذر تحميل المحادثات."
+      await apiFetch(
+        "/conversations"
       );
-    }
+
 
     renderConversations(
       data.conversations || data || []
     );
 
+
   } catch (error) {
 
     console.error(
-      "Conversation loading error:",
+      "Failed to load conversations:",
       error
     );
 
@@ -312,63 +472,119 @@ async function loadConversations() {
 }
 
 
-/* =========================================================
-   RENDER CONVERSATIONS
-   ========================================================= */
-
-function renderConversations(conversations) {
-
-  if (!chatList) return;
+function renderConversations(
+  conversations
+) {
 
   chatList.innerHTML = "";
 
+
   if (!conversations.length) {
 
-    chatList.innerHTML = `
-      <div class="empty-chats">
-        لا توجد محادثات بعد.
-      </div>
-    `;
+    const empty =
+      document.createElement("div");
+
+    empty.style.padding = "20px 10px";
+
+    empty.style.color = "#555";
+
+    empty.style.fontSize = "12px";
+
+    empty.style.textAlign = "center";
+
+    empty.textContent =
+      "لا توجد محادثات بعد.";
+
+    chatList.appendChild(empty);
 
     return;
   }
 
-  conversations.forEach(conversation => {
 
-    const chat = document.createElement("div");
+  conversations.forEach(
+    (conversation) => {
 
-    chat.className = "chat";
+      const item =
+        document.createElement("div");
 
-    chat.dataset.id =
-      conversation.id;
+      item.className =
+        "chat-item";
 
-    const title =
-      conversation.title ||
-      "محادثة جديدة";
 
-    chat.innerHTML = `
-      <div class="chat-main">
-        <div class="chat-title">
-          ${escapeHTML(title)}
-        </div>
+      if (
+        Number(conversation.id) ===
+        Number(conversationId)
+      ) {
 
-        <div class="chat-preview">
-          محادثة أدبية
-        </div>
-      </div>
+        item.classList.add("active");
 
-      <button
-        class="chat-menu"
-        type="button"
-        title="حذف"
-      >
-        ⋮
-      </button>
-    `;
+      }
 
-    chatList.appendChild(chat);
 
-  });
+      const title =
+        document.createElement("div");
+
+      title.className =
+        "chat-item-title";
+
+      title.textContent =
+        conversation.title ||
+        "محادثة جديدة";
+
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.className =
+        "chat-delete";
+
+      deleteButton.type =
+        "button";
+
+      deleteButton.textContent =
+        "×";
+
+      deleteButton.title =
+        "حذف المحادثة";
+
+
+      item.appendChild(title);
+
+      item.appendChild(
+        deleteButton
+      );
+
+
+      item.addEventListener(
+        "click",
+        () => {
+
+          openConversation(
+            conversation.id
+          );
+
+        }
+      );
+
+
+      deleteButton.addEventListener(
+        "click",
+        async (event) => {
+
+          event.stopPropagation();
+
+          await deleteConversation(
+            conversation.id
+          );
+
+        }
+      );
+
+
+      chatList.appendChild(item);
+
+    }
+  );
 }
 
 
@@ -378,95 +594,80 @@ function renderConversations(conversations) {
 
 async function openConversation(id) {
 
-  if (!id) return;
-
   try {
 
-    const response =
+    const data =
       await apiFetch(
         `/conversations/${id}`
       );
 
-    const data =
-      await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.error ||
-        "تعذر فتح المحادثة."
-      );
-    }
 
     conversationId =
-      data.id ||
       data.conversation_id ||
+      data.id ||
       id;
 
-    const loadedMessages =
-      data.messages || [];
 
-    conversationHistory = [];
+    const conversation =
+      data.conversation ||
+      data;
+
+
+    const loadedMessages =
+      conversation.messages ||
+      data.messages ||
+      [];
+
+
+    conversationHistory =
+      loadedMessages.map(
+        (message) => ({
+          role: message.role,
+          content: message.content
+        })
+      );
+
 
     messages.innerHTML = "";
 
-    loadedMessages.forEach(message => {
 
-      if (
-        message.role !== "user" &&
-        message.role !== "assistant"
-      ) {
-        return;
+    loadedMessages.forEach(
+      (message) => {
+
+        addMessage(
+          message.role === "user"
+            ? "user"
+            : "ai",
+          message.content
+        );
+
       }
+    );
 
-      conversationHistory.push({
-        role: message.role,
-        content: message.content
-      });
-
-      addMessage(
-        message.role === "user"
-          ? "user"
-          : "ai",
-        message.role === "assistant"
-          ? formatAIResponse(message.content)
-          : message.content
-      );
-
-    });
-
-    const activeChat =
-      document.querySelector(
-        `.chat[data-id="${id}"]`
-      );
-
-    document
-      .querySelectorAll(".chat")
-      .forEach(chat =>
-        chat.classList.remove("active")
-      );
-
-    activeChat?.classList.add("active");
 
     const title =
-      activeChat
-        ?.querySelector(".chat-title")
-        ?.textContent
-        ?.trim();
+      conversation.title ||
+      "محادثة";
 
-    currentChat.textContent =
-      title || "Wassim AI";
+
+    currentChatTitle.textContent =
+      title;
+
+
+    await loadConversations();
+
 
     closeSidebar();
 
+
     scrollToBottom();
+
 
   } catch (error) {
 
-    console.error(error);
-
-    addMessage(
-      "ai",
-      "تعذر فتح هذه المحادثة."
+    console.error(
+      "Failed to open conversation:",
+      error
     );
 
   }
@@ -474,100 +675,41 @@ async function openConversation(id) {
 
 
 /* =========================================================
-   CHAT LIST CLICK
-   ========================================================= */
-
-chatList?.addEventListener(
-  "click",
-  async event => {
-
-    const chat =
-      event.target.closest(".chat");
-
-    if (!chat) return;
-
-    /*
-      حذف المحادثة
-    */
-
-    if (
-      event.target.closest(".chat-menu")
-    ) {
-
-      const id =
-        chat.dataset.id;
-
-      await deleteConversation(id);
-
-      return;
-    }
-
-    await openConversation(
-      chat.dataset.id
-    );
-
-  }
-);
-
-
-/* =========================================================
    DELETE CONVERSATION
    ========================================================= */
 
-async function deleteConversation(id) {
-
-  if (!id) return;
-
-  const confirmed =
-    confirm(
-      "هل تريد حذف هذه المحادثة؟"
-    );
-
-  if (!confirmed) return;
+async function deleteConversation(
+  id
+) {
 
   try {
 
-    const response =
-      await apiFetch(
-        `/conversations/${id}`,
-        {
-          method: "DELETE"
-        }
-      );
+    await apiFetch(
+      `/conversations/${id}`,
+      {
+        method: "DELETE"
+      }
+    );
 
-    const data =
-      await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        data.error ||
-        "تعذر حذف المحادثة."
-      );
-    }
 
     if (
-      String(conversationId) ===
-      String(id)
+      Number(conversationId) ===
+      Number(id)
     ) {
 
-      conversationId = null;
-      conversationHistory = [];
+      newChat();
 
-      welcomeScreen();
-
-      currentChat.textContent =
-        "Wassim AI";
     }
+
 
     await loadConversations();
 
+
   } catch (error) {
 
-    console.error(error);
-
-    alert(
-      error.message ||
-      "تعذر حذف المحادثة."
+    console.error(
+      "Failed to delete conversation:",
+      error
     );
 
   }
@@ -578,110 +720,158 @@ async function deleteConversation(id) {
    NEW CHAT
    ========================================================= */
 
-newChatButton?.addEventListener(
+function newChat() {
+
+  conversationId = null;
+
+  conversationHistory = [];
+
+
+  currentChatTitle.textContent =
+    "مساحة الكتابة";
+
+
+  showWelcome();
+
+
+  document
+    .querySelectorAll(".chat-item")
+    .forEach(
+      (item) => {
+        item.classList.remove(
+          "active"
+        );
+      }
+    );
+
+
+  closeSidebar();
+
+
+  setTimeout(
+    () => {
+      messageInput.focus();
+    },
+    50
+  );
+}
+
+
+newChatButton.addEventListener(
   "click",
-  () => {
-
-    conversationHistory = [];
-    conversationId = null;
-
-    welcomeScreen();
-
-    currentChat.textContent =
-      "Wassim AI";
-
-    document
-      .querySelectorAll(".chat")
-      .forEach(chat =>
-        chat.classList.remove("active")
-      );
-
-    closeSidebar();
-
-    messageInput?.focus();
-
-  }
+  newChat
 );
 
 
 /* =========================================================
-   WELCOME SCREEN
+   WELCOME
    ========================================================= */
 
-function welcomeScreen() {
+function showWelcome() {
 
-  if (!messages) return;
+  messages.innerHTML = "";
 
-  messages.innerHTML = `
-    <div class="welcome" id="welcome">
+  messages.appendChild(
+    createWelcome()
+  );
 
-      <div class="welcome-content">
+}
 
-        <div class="welcome-logo">
-          W
-        </div>
 
-        <h1>
-          أنا <span>وسيم</span>
-        </h1>
+function createWelcome() {
 
-        <p class="welcome-subtitle">
-          رفيقك الأدبي في عالم الكتابة.
-        </p>
+  const welcome =
+    document.createElement("div");
 
-        <p class="welcome-description">
-          اكتب فكرتك كما هي، حتى لو كانت مجرد سطر.
-          نكمّلها معًا.
-        </p>
+  welcome.className =
+    "welcome";
 
-        <div class="quick-actions">
 
-          <button
-            class="quick-action"
-            data-prompt="أريد كتابة قصيدة عن "
-          >
-            <span>🪶</span>
-            <strong>اكتب قصيدة</strong>
-            <small>شعر وصور وإيقاع</small>
-          </button>
+  welcome.innerHTML = `
 
-          <button
-            class="quick-action"
-            data-prompt="أريد بناء رواية عن "
-          >
-            <span>📖</span>
-            <strong>ابنِ رواية</strong>
-            <small>فكرة وحبكة وشخصيات</small>
-          </button>
+    <div class="welcome-content">
 
-          <button
-            class="quick-action"
-            data-prompt="أريد كتابة نص أدبي عن "
-          >
-            <span>✒️</span>
-            <strong>اكتب نصًا</strong>
-            <small>أدب وخاطرة وقصة</small>
-          </button>
+      <div class="welcome-logo">
 
-          <button
-            class="quick-action"
-            data-prompt="أريد تحليل هذا النص أدبيًا: "
-          >
-            <span>🔍</span>
-            <strong>حلّل نصي</strong>
-            <small>نقد وتحسين وتحرير</small>
-          </button>
+        <img
+          src="IMG_20260923_195409_648.jpg"
+          alt="Wassim AI"
+        >
 
-        </div>
+      </div>
+
+
+      <h1>
+        مرحبًا بك في
+        <span>Wassim AI</span>
+      </h1>
+
+
+      <p class="welcome-subtitle">
+        مساحة أدبية تفكر معك، لا بدلًا منك.
+      </p>
+
+
+      <p class="welcome-description">
+        اكتب، حلّل، طوّر روايتك، ابنِ شخصياتك،
+        أو دعنا نعمل على نصك خطوة بخطوة.
+      </p>
+
+
+      <div class="quick-actions">
+
+        <button
+          class="quick-action"
+          data-prompt="أريد أن أكتب قصيدة. ساعدني في بناء الفكرة والصور الشعرية والقافية دون أن تكتب بدلًا مني."
+          type="button"
+        >
+          <span class="quick-icon">🪶</span>
+          <span>اكتب قصيدة</span>
+        </button>
+
+
+        <button
+          class="quick-action"
+          data-prompt="أريد بناء رواية. ساعدني في تطوير الفكرة والشخصيات والأحداث والزمن والترابط."
+          type="button"
+        >
+          <span class="quick-icon">📖</span>
+          <span>ابنِ رواية</span>
+        </button>
+
+
+        <button
+          class="quick-action"
+          data-prompt="أريد كتابة نص أدبي. ساعدني في تطويره مع الحفاظ على أسلوبي وصوتي ككاتب."
+          type="button"
+        >
+          <span class="quick-icon">✒️</span>
+          <span>اكتب نصًا أدبيًا</span>
+        </button>
+
+
+        <button
+          class="quick-action"
+          data-prompt="سأرسل لك نصًا أدبيًا. أريد نقدًا واضحًا ومباشرًا يحدد نقاط القوة والمشكلات والحلول المقترحة."
+          type="button"
+        >
+          <span class="quick-icon">🔍</span>
+          <span>حلّل نصي</span>
+        </button>
 
       </div>
 
     </div>
+
   `;
 
-  messageInput.value = "";
 
-  autoResizeInput();
+  attachQuickActions(
+    welcome
+  );
+
+
+  return welcome;
 }
 
 
@@ -689,214 +879,44 @@ function welcomeScreen() {
    QUICK ACTIONS
    ========================================================= */
 
-document.addEventListener(
-  "click",
-  event => {
+function attachQuickActions(
+  container
+) {
 
-    const button =
-      event.target.closest(
-        ".quick-action"
-      );
+  container
+    .querySelectorAll(
+      ".quick-action"
+    )
+    .forEach(
+      (button) => {
 
-    if (!button) return;
+        button.addEventListener(
+          "click",
+          () => {
 
-    const prompt =
-      button.getAttribute(
-        "data-prompt"
-      );
+            messageInput.value =
+              button.dataset.prompt;
 
-    if (!prompt) return;
+            autoResize();
 
-    messageInput.value =
-      prompt;
+            messageInput.focus();
 
-    messageInput.focus();
-
-    autoResizeInput();
-
-  }
-);
-
-
-/* =========================================================
-   SEND MESSAGE
-   ========================================================= */
-
-async function sendMessage() {
-
-  const text =
-    messageInput.value.trim();
-
-  if (!text || isSending) return;
-
-  if (!token) {
-
-    showAuth();
-
-    return;
-  }
-
-  isSending = true;
-
-  sendButton.disabled = true;
-
-  const welcome =
-    document.getElementById("welcome");
-
-  if (welcome) {
-    welcome.remove();
-  }
-
-  addMessage(
-    "user",
-    text
-  );
-
-  messageInput.value = "";
-
-  autoResizeInput();
-
-  scrollToBottom();
-
-  showThinking();
-
-  try {
-
-    const response =
-      await apiFetch(
-        "/chat",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body: JSON.stringify({
-            message: text,
-
-            messages:
-              conversationHistory,
-
-            conversation_id:
-              conversationId
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    removeThinking();
-
-    if (!response.ok) {
-
-      throw new Error(
-        data.error ||
-        "حدث خطأ أثناء الاتصال بوسيم."
-      );
-
-    }
-
-    const reply =
-      data.reply ||
-      "ما وصلنيش رد.";
-
-    conversationId =
-      data.conversation_id ||
-      conversationId;
-
-    conversationHistory.push({
-      role: "user",
-      content: text
-    });
-
-    conversationHistory.push({
-      role: "assistant",
-      content: reply
-    });
-
-    addMessage(
-      "ai",
-      formatAIResponse(reply)
-    );
-
-    /*
-      بعد إنشاء أول محادثة،
-      نعيد تحميل القائمة حتى يظهر عنوانها.
-    */
-
-    await loadConversations();
-
-    /*
-      جعل المحادثة الحالية نشطة
-    */
-
-    if (conversationId) {
-
-      const activeChat =
-        document.querySelector(
-          `.chat[data-id="${conversationId}"]`
+          }
         );
 
-      document
-        .querySelectorAll(".chat")
-        .forEach(chat =>
-          chat.classList.remove("active")
-        );
-
-      activeChat?.classList.add(
-        "active"
-      );
-
-      const title =
-        activeChat
-          ?.querySelector(".chat-title")
-          ?.textContent
-          ?.trim();
-
-      if (title) {
-        currentChat.textContent =
-          title;
       }
-
-    }
-
-    scrollToBottom();
-
-  } catch (error) {
-
-    removeThinking();
-
-    console.error(error);
-
-    addMessage(
-      "ai",
-      `
-        صار مشكل صغير في الاتصال.
-        <br><br>
-        جرّب تبعثها مرة أخرى.
-      `
     );
-
-  } finally {
-
-    isSending = false;
-
-    sendButton.disabled = false;
-
-    messageInput.focus();
-
-  }
 }
 
 
 /* =========================================================
-   MESSAGE UI
+   ADD MESSAGE
    ========================================================= */
 
-function addMessage(type, text) {
+function addMessage(
+  type,
+  text
+) {
 
   const wrapper =
     document.createElement("div");
@@ -904,13 +924,23 @@ function addMessage(type, text) {
   wrapper.className =
     `message ${type}`;
 
+
   const avatar =
     document.createElement("div");
 
   avatar.className =
     "message-avatar";
 
-  avatar.textContent = "W";
+
+  avatar.innerHTML = `
+
+    <img
+      src="IMG_20260923_195409_648.jpg"
+      alt="Wassim AI"
+    >
+
+  `;
+
 
   const content =
     document.createElement("div");
@@ -918,38 +948,100 @@ function addMessage(type, text) {
   content.className =
     "message-content";
 
+
   if (type === "user") {
 
-    content.textContent = text;
+    content.textContent =
+      text;
 
   } else {
 
-    content.innerHTML = text;
+    content.innerHTML =
+      formatAIResponse(text);
 
   }
 
-  wrapper.appendChild(avatar);
-  wrapper.appendChild(content);
 
-  messages.appendChild(wrapper);
+  wrapper.appendChild(
+    avatar
+  );
+
+  wrapper.appendChild(
+    content
+  );
+
+
+  messages.appendChild(
+    wrapper
+  );
+
+
+  scrollToBottom();
 }
 
 
-function formatAIResponse(text) {
+/* =========================================================
+   AI RESPONSE FORMAT
+   ========================================================= */
+
+function formatAIResponse(
+  text
+) {
 
   if (!text) return "";
 
-  return escapeHTML(text)
-    .replace(/\n/g, "<br>");
+
+  let html =
+    escapeHTML(text);
+
+
+  html =
+    html.replace(
+      /\*\*(.*?)\*\*/g,
+      "<strong>$1</strong>"
+    );
+
+
+  html =
+    html.replace(
+      /`([^`]+)`/g,
+      "<code>$1</code>"
+    );
+
+
+  html =
+    html.replace(
+      /\n\n+/g,
+      "</p><p>"
+    );
+
+
+  html =
+    html.replace(
+      /\n/g,
+      "<br>"
+    );
+
+
+  return `<p>${html}</p>`;
 }
 
 
-function escapeHTML(text) {
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(
+  text
+) {
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  div.textContent = text;
+  div.textContent =
+    text;
 
   return div.innerHTML;
 }
@@ -966,8 +1058,10 @@ function showThinking() {
       "thinking"
     )
   ) {
+
     return;
   }
+
 
   const wrapper =
     document.createElement("div");
@@ -978,51 +1072,220 @@ function showThinking() {
   wrapper.id =
     "thinking";
 
+
   wrapper.innerHTML = `
+
     <div class="message-avatar">
-      W
+
+      <img
+        src="IMG_20260923_195409_648.jpg"
+        alt="Wassim AI"
+      >
+
     </div>
 
+
     <div class="message-content">
+
       <span style="color:#777;">
         وسيم يفكر…
       </span>
+
     </div>
+
   `;
+
 
   messages.appendChild(
     wrapper
   );
 
+
   scrollToBottom();
 }
 
 
-function removeThinking() {
+function hideThinking() {
 
   const thinking =
     document.getElementById(
       "thinking"
     );
 
+
   if (thinking) {
+
     thinking.remove();
+
   }
 }
 
 
 /* =========================================================
-   INPUT
+   SEND MESSAGE
    ========================================================= */
 
-sendButton?.addEventListener(
+async function sendMessage() {
+
+  if (isSending) return;
+
+
+  const text =
+    messageInput.value.trim();
+
+
+  if (!text) return;
+
+
+  isSending = true;
+
+  sendButton.disabled = true;
+
+
+  if (
+    welcomeScreen &&
+    welcomeScreen.parentNode
+  ) {
+
+    welcomeScreen.remove();
+
+  }
+
+
+  addMessage(
+    "user",
+    text
+  );
+
+
+  conversationHistory.push({
+    role: "user",
+    content: text
+  });
+
+
+  messageInput.value = "";
+
+  autoResize();
+
+
+  showThinking();
+
+
+  try {
+
+    const data =
+      await apiFetch(
+        "/chat",
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            message: text,
+
+            messages:
+              conversationHistory,
+
+            conversation_id:
+              conversationId
+          })
+        }
+      );
+
+
+    hideThinking();
+
+
+    const reply =
+      data.reply ||
+      data.response ||
+      data.message ||
+      "لم يصل رد من وسيم.";
+
+
+    conversationId =
+      data.conversation_id ||
+      conversationId;
+
+
+    conversationHistory.push({
+      role: "assistant",
+      content: reply
+    });
+
+
+    addMessage(
+      "ai",
+      reply
+    );
+
+
+    currentChatTitle.textContent =
+      getConversationTitle(
+        text
+      );
+
+
+    await loadConversations();
+
+
+  } catch (error) {
+
+    hideThinking();
+
+
+    console.error(
+      "Chat error:",
+      error
+    );
+
+
+    const errorMessage =
+      "حدث خطأ أثناء الاتصال بوسيم. حاول مرة أخرى.";
+
+
+    addMessage(
+      "ai",
+      errorMessage
+    );
+
+
+    /*
+      لا نترك رسالة المستخدم في
+      history إذا فشل الطلب.
+    */
+
+    conversationHistory.pop();
+
+  } finally {
+
+    isSending = false;
+
+    sendButton.disabled = false;
+
+    messageInput.focus();
+
+  }
+}
+
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
+sendButton.addEventListener(
   "click",
   sendMessage
 );
 
-messageInput?.addEventListener(
+
+/* =========================================================
+   ENTER TO SEND
+   ========================================================= */
+
+messageInput.addEventListener(
   "keydown",
-  event => {
+  (event) => {
 
     if (
       event.key === "Enter" &&
@@ -1038,24 +1301,74 @@ messageInput?.addEventListener(
   }
 );
 
-messageInput?.addEventListener(
-  "input",
-  autoResizeInput
-);
 
+/* =========================================================
+   AUTO RESIZE TEXTAREA
+   ========================================================= */
 
-function autoResizeInput() {
-
-  if (!messageInput) return;
+function autoResize() {
 
   messageInput.style.height =
     "auto";
 
+
   messageInput.style.height =
     Math.min(
       messageInput.scrollHeight,
-      120
+      180
     ) + "px";
+}
+
+
+messageInput.addEventListener(
+  "input",
+  autoResize
+);
+
+/* =========================================================
+   SCROLL
+   ========================================================= */
+
+function scrollToBottom() {
+
+  requestAnimationFrame(
+    () => {
+
+      messages.scrollTop =
+        messages.scrollHeight;
+
+    }
+  );
+}
+
+
+/* =========================================================
+   CONVERSATION TITLE
+   ========================================================= */
+
+function getConversationTitle(
+  text
+) {
+
+  let title =
+    text
+      .replace(/\s+/g, " ")
+      .trim();
+
+
+  if (title.length > 80) {
+
+    title =
+      title.substring(
+        0,
+        80
+      ) + "...";
+
+  }
+
+
+  return title ||
+    "محادثة جديدة";
 }
 
 
@@ -1063,148 +1376,118 @@ function autoResizeInput() {
    SEARCH
    ========================================================= */
 
-searchInput?.addEventListener(
+searchInput.addEventListener(
   "input",
-  () => {
+  async () => {
 
     const query =
       searchInput.value
         .trim()
         .toLowerCase();
 
-    document
-      .querySelectorAll(".chat")
-      .forEach(chat => {
+
+    const items =
+      chatList.querySelectorAll(
+        ".chat-item"
+      );
+
+
+    items.forEach(
+      (item) => {
 
         const title =
-          chat
+          item
             .querySelector(
-              ".chat-title"
+              ".chat-item-title"
             )
             ?.textContent
             .toLowerCase() || "";
 
-        const preview =
-          chat
-            .querySelector(
-              ".chat-preview"
-            )
-            ?.textContent
-            .toLowerCase() || "";
 
-        chat.style.display =
+        item.style.display =
           !query ||
-          title.includes(query) ||
-          preview.includes(query)
+          title.includes(query)
             ? ""
             : "none";
 
-      });
+      }
+    );
 
   }
 );
 
+
 /* =========================================================
-   LOGOUT
+   CHECK AUTH
    ========================================================= */
 
-function logout(showLogin = true) {
+async function checkAuth() {
 
-  token = null;
-  currentUser = null;
+  if (!token) {
 
-  localStorage.removeItem(
-    "wassim_token"
-  );
+    setAuthMode(false);
 
-  localStorage.removeItem(
-    "wassim_user"
-  );
+    showAuth();
 
-  conversationId = null;
-  conversationHistory = [];
+    return;
 
-  if (chatList) {
-    chatList.innerHTML = "";
   }
 
-  welcomeScreen();
 
-  currentChat.textContent =
-    "Wassim AI";
+  try {
 
-  if (showLogin) {
-    showAuth();
+    const data =
+      await apiFetch(
+        "/me"
+      );
+
+
+    currentUser =
+      data.user ||
+      data;
+
+
+    localStorage.setItem(
+      "wassim_user",
+      JSON.stringify(
+        currentUser
+      )
+    );
+
+
+    updateAccount();
+
+    hideAuth();
+
+    await loadConversations();
+
+
+  } catch (error) {
+
+    console.error(
+      "Auth check failed:",
+      error
+    );
+
+
+    logout(true);
+
   }
 }
 
 
 /* =========================================================
-   INITIALIZATION
+   INITIALIZE
    ========================================================= */
 
-async function initializeApp() {
+async function init() {
 
-  autoResizeInput();
+  updateAccount();
 
-  /*
-    إذا كان المستخدم مسجل الدخول
-    نحاول تحميل محادثاته.
-  */
+  autoResize();
 
-  if (token) {
+  await checkAuth();
 
-    try {
-
-      const response =
-        await apiFetch("/me");
-
-      if (!response.ok) {
-        throw new Error(
-          "Invalid session"
-        );
-      }
-
-      const data =
-        await response.json();
-
-      currentUser =
-        data.user ||
-        currentUser;
-
-      localStorage.setItem(
-        "wassim_user",
-        JSON.stringify(
-          currentUser
-        )
-      );
-
-      hideAuth();
-
-      await loadConversations();
-
-    } catch (error) {
-
-      console.log(
-        "Session expired."
-      );
-
-      logout(false);
-
-      showAuth();
-
-    }
-
-  } else {
-
-    /*
-      أول زيارة:
-      افتح شاشة تسجيل الدخول.
-    */
-
-    showAuth();
-
-  }
 }
 
 
@@ -1212,6 +1495,4 @@ async function initializeApp() {
    START
    ========================================================= */
 
-setAuthMode(false);
-
-initializeApp();
+init();
