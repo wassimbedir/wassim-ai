@@ -1,5 +1,6 @@
 /* =========================================================
-   WASSIM AI — LITERARY CHAT
+   WASSIM AI — LITERARY BRAIN v1
+   شخصية أدبية قصيرة وطبيعية
    ========================================================= */
 
 const sidebar = document.getElementById("sidebar");
@@ -39,18 +40,17 @@ overlay?.addEventListener("click", closeSidebar);
 
 
 /* =========================================================
-   WELCOME SCREEN
+   WELCOME
    ========================================================= */
 
 function welcomeScreen() {
+
   messages.innerHTML = `
     <div class="welcome" id="welcome">
 
       <div class="welcome-content">
 
-        <div class="welcome-logo">
-          W
-        </div>
+        <div class="welcome-logo">W</div>
 
         <h1>
           أنا <span>وسيم</span>
@@ -61,8 +61,8 @@ function welcomeScreen() {
         </p>
 
         <p class="welcome-description">
-          اكتب قصيدتك، ابنِ روايتك، طوّر شخصياتك،
-          أو أحضر نصك وسأقرأه معك.
+          اكتب فكرتك كما هي، حتى لو كانت مجرد سطر.
+          نكمّلها معًا.
         </p>
 
         <div class="quick-actions">
@@ -119,12 +119,6 @@ function welcomeScreen() {
    QUICK ACTIONS
    ========================================================= */
 
-/*
-   Event Delegation:
-   نخلي الأزرار تخدم سواء كانت موجودة من البداية
-   أو تم إنشاؤها لاحقًا بواسطة JavaScript.
-*/
-
 document.addEventListener("click", event => {
 
   const button = event.target.closest(".quick-action");
@@ -166,7 +160,7 @@ newChatButton?.addEventListener("click", () => {
 
 
 /* =========================================================
-   SEND MESSAGE
+   SEND
    ========================================================= */
 
 function sendMessage() {
@@ -189,82 +183,242 @@ function sendMessage() {
 
   scrollToBottom();
 
+  showThinking();
 
   setTimeout(() => {
 
+    removeThinking();
+
     addMessage(
       "ai",
-      generateLiteraryDemoResponse(text)
+      literaryResponse(text)
     );
 
     scrollToBottom();
 
-  }, 650);
+  }, 550);
 
 }
 
 
 /* =========================================================
-   DEMO AI RESPONSE
+   LOCAL LITERARY BRAIN
    ========================================================= */
 
-function generateLiteraryDemoResponse(text) {
+function literaryResponse(text) {
+
+  const t = text.toLowerCase();
+
+
+  /* -----------------------------------------
+     GREETING
+     ----------------------------------------- */
 
   if (
-    text.includes("قصيدة") ||
-    text.includes("شعر")
+    /^(السلام عليكم|سلام|مرحبا|مرحبًا|أهلا|أهلًا|هاي|hello|hi)/i.test(text)
   ) {
 
     return `
-      <strong>🪶 لنكتبها معًا.</strong>
-      <br><br>
-      أخبرني عن الفكرة أو الشعور الذي تريد أن تدور حوله
-      القصيدة، وسأساعدك في بنائها.
+      أهلًا. <br>
+      وش نكتب اليوم؟
     `;
 
   }
 
 
+  /* -----------------------------------------
+     POETRY
+     ----------------------------------------- */
+
   if (
-    text.includes("رواية") ||
-    text.includes("روايت") ||
-    text.includes("قصة")
+    t.includes("قصيدة") ||
+    t.includes("شعر") ||
+    t.includes("بيت شعر")
   ) {
 
+    if (
+      t.includes("عن ") &&
+      text.trim().length > 25
+    ) {
+
+      return `
+        إي، فهمت الفكرة. <br><br>
+        خلينا أولًا نحدد الجو: حزين، عاطفي، تأملي، ولا شيء مختلف؟
+      `;
+
+    }
+
     return `
-      <strong>📖 لنبدأ من الفكرة.</strong>
-      <br><br>
-      أعطني فكرتك، حتى لو كانت مجرد سطر واحد،
-      وسنحوّلها إلى عالم وشخصيات وصراع وحبكة.
+      أكيد. عطيني الفكرة أو الشعور فقط، وأنا نبدأ معك من هناك.
     `;
 
   }
 
 
+  /* -----------------------------------------
+     NOVEL
+     ----------------------------------------- */
+
   if (
-    text.includes("حلل") ||
-    text.includes("حلّل") ||
-    text.includes("نقد")
+    t.includes("رواية") ||
+    t.includes("حبكة") ||
+    t.includes("بطل") ||
+    t.includes("فصل")
   ) {
 
     return `
-      <strong>🔍 سأقرأ النص ككاتب وناقد.</strong>
+      تمام. احكيلي الفكرة كما جاتك، حتى لو كانت ناقصة.
       <br><br>
-      أرسل النص، وسأحدد نقاط القوة والمشكلات
-      ثم أقترح تعديلات تحافظ على صوتك.
+      ما نحتاجوش نرتبوها من البداية.
     `;
 
   }
 
+
+  /* -----------------------------------------
+     CHARACTERS
+     ----------------------------------------- */
+
+  if (
+    t.includes("شخصية") ||
+    t.includes("شخصيات")
+  ) {
+
+    return `
+      خلينا ما نبدأوش بالاسم والعمر فقط.
+      <br><br>
+      قولي: واش أكثر حاجة تخاف تخسرها هذي الشخصية؟
+    `;
+
+  }
+
+
+  /* -----------------------------------------
+     CRITICISM
+     ----------------------------------------- */
+
+  if (
+    t.includes("حلل") ||
+    t.includes("حلّل") ||
+    t.includes("نقد") ||
+    t.includes("رأيك") ||
+    t.includes("قيّم")
+  ) {
+
+    return `
+      ابعثه كما هو. <br>
+      نقرأه أولًا، وبعدها نقولك وين القوة ووين عندي ملاحظات.
+    `;
+
+  }
+
+
+  /* -----------------------------------------
+     EDITING
+     ----------------------------------------- */
+
+  if (
+    t.includes("صحح") ||
+    t.includes("صحّح") ||
+    t.includes("عدّل") ||
+    t.includes("تعديل") ||
+    t.includes("صياغة")
+  ) {
+
+    return `
+      ابعث النص. <br>
+      ونشوف أولًا واش يحتاج فعلًا، ما نبدلش أسلوبك بلا سبب.
+    `;
+
+  }
+
+
+  /* -----------------------------------------
+     IDEA
+     ----------------------------------------- */
+
+  if (
+    t.includes("فكرة") ||
+    t.includes("عندي فكرة") ||
+    t.includes("فكرتي")
+  ) {
+
+    return `
+      قولها. حتى لو كانت ملخبطة. <br>
+      أحيانًا أحسن الأفكار تبدأ هكذا.
+    `;
+
+  }
+
+
+  /* -----------------------------------------
+     THANKS
+     ----------------------------------------- */
+
+  if (
+    t.includes("شكرا") ||
+    t.includes("شكرًا") ||
+    t.includes("مشكور")
+  ) {
+
+    return `
+      العفو. 🖤
+    `;
+
+  }
+
+
+  /* -----------------------------------------
+     DEFAULT
+     ----------------------------------------- */
 
   return `
-    <strong>أهلًا بك في Wassim AI.</strong>
-    <br><br>
-    أنا مساعدك الأدبي المتخصص في الشعر والروايات
-    والقصص والكتابة والنقد والتحرير.
-    <br><br>
-    اكتب فكرتك كما هي، حتى لو لم تكن مكتملة.
+    فهمتك. <br><br>
+    كمّل… أنا معك.
   `;
+
+}
+
+
+/* =========================================================
+   THINKING
+   ========================================================= */
+
+function showThinking() {
+
+  if (document.getElementById("thinking")) return;
+
+  const wrapper = document.createElement("div");
+
+  wrapper.className = "message ai";
+
+  wrapper.id = "thinking";
+
+  wrapper.innerHTML = `
+    <div class="message-avatar">W</div>
+
+    <div class="message-content">
+      <span style="color:#777;">
+        وسيم يفكر…
+      </span>
+    </div>
+  `;
+
+  messages.appendChild(wrapper);
+
+  scrollToBottom();
+
+}
+
+
+function removeThinking() {
+
+  const thinking =
+    document.getElementById("thinking");
+
+  if (thinking) {
+    thinking.remove();
+  }
 
 }
 
@@ -275,21 +429,27 @@ function generateLiteraryDemoResponse(text) {
 
 function addMessage(type, text) {
 
-  const wrapper = document.createElement("div");
+  const wrapper =
+    document.createElement("div");
 
-  wrapper.className = `message ${type}`;
+  wrapper.className =
+    `message ${type}`;
 
 
-  const avatar = document.createElement("div");
+  const avatar =
+    document.createElement("div");
 
-  avatar.className = "message-avatar";
+  avatar.className =
+    "message-avatar";
 
   avatar.textContent = "W";
 
 
-  const content = document.createElement("div");
+  const content =
+    document.createElement("div");
 
-  content.className = "message-content";
+  content.className =
+    "message-content";
 
 
   if (type === "user") {
@@ -323,7 +483,7 @@ sendButton?.addEventListener(
 
 
 /* =========================================================
-   ENTER TO SEND
+   ENTER
    ========================================================= */
 
 messageInput?.addEventListener(
@@ -346,7 +506,7 @@ messageInput?.addEventListener(
 
 
 /* =========================================================
-   AUTO RESIZE INPUT
+   AUTO RESIZE
    ========================================================= */
 
 messageInput?.addEventListener(
@@ -384,28 +544,32 @@ searchInput?.addEventListener(
         .toLowerCase();
 
 
-    document.querySelectorAll(".chat").forEach(chat => {
+    document
+      .querySelectorAll(".chat")
+      .forEach(chat => {
 
-      const title =
-        chat.querySelector(".chat-title")
-          ?.textContent
-          .toLowerCase() || "";
-
-
-      const preview =
-        chat.querySelector(".chat-preview")
-          ?.textContent
-          .toLowerCase() || "";
+        const title =
+          chat
+            .querySelector(".chat-title")
+            ?.textContent
+            .toLowerCase() || "";
 
 
-      chat.style.display =
-        !query ||
-        title.includes(query) ||
-        preview.includes(query)
-          ? ""
-          : "none";
+        const preview =
+          chat
+            .querySelector(".chat-preview")
+            ?.textContent
+            .toLowerCase() || "";
 
-    });
+
+        chat.style.display =
+          !query ||
+          title.includes(query) ||
+          preview.includes(query)
+            ? ""
+            : "none";
+
+      });
 
   }
 );
@@ -476,11 +640,5 @@ function scrollToBottom() {
 /* =========================================================
    INITIALIZE
    ========================================================= */
-
-/*
-   مهم:
-   ما نستعملوش welcomeScreen() هنا حتى ما نمسحوش
-   المحتوى الموجود في HTML عند فتح الصفحة.
-*/
 
 autoResizeInput();
