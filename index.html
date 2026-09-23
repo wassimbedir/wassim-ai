@@ -7,212 +7,248 @@
   <title>Wassim AI</title>
   <meta name="description" content="Wassim AI — مساعدك الذكي">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #0b0b0f;
-      color: #f5f5f5;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      height: 64px;
-      border-bottom: 1px solid #22222a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .logo span {
-      color: #d4af37;
-    }
-
-    .status {
-      font-size: 12px;
-      color: #777;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 30px 16px 100px;
-    }
-
-    .welcome {
-      text-align: center;
-      max-width: 700px;
-      width: 100%;
-    }
-
-    .welcome h1 {
-      font-size: clamp(32px, 8vw, 60px);
-      margin-bottom: 15px;
-    }
-
-    .welcome h1 span {
-      color: #d4af37;
-    }
-
-    .welcome p {
-      color: #999;
-      font-size: 16px;
-      line-height: 1.8;
-      margin-bottom: 35px;
-    }
-
-    .input-box {
-      width: 100%;
-      max-width: 650px;
-      margin: auto;
-      background: #15151c;
-      border: 1px solid #292932;
-      border-radius: 18px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .input-box textarea {
-      flex: 1;
-      resize: none;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: white;
-      font-size: 15px;
-      padding: 12px;
-      min-height: 45px;
-      font-family: inherit;
-    }
-
-    .input-box button {
-      width: 45px;
-      height: 45px;
-      border: none;
-      border-radius: 13px;
-      background: #d4af37;
-      color: #111;
-      font-size: 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .input-box button:hover {
-      transform: scale(1.05);
-    }
-
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 45px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #555;
-      font-size: 11px;
-      background: #0b0b0f;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 0 14px;
-      }
-
-      main {
-        padding-bottom: 80px;
-      }
-
-      .welcome p {
-        font-size: 14px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <header>
-    <div class="logo">
-      <span>W</span>assim AI
+<div class="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+      <div class="logo">
+        <span>W</span>assim AI
+      </div>
+
+      <button class="new-chat" id="newChat" title="محادثة جديدة">
+        ＋
+      </button>
+
     </div>
 
-    <div class="status">
-      الإصدار التجريبي
+    <div class="search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="بحث في المحادثات..."
+      >
     </div>
-  </header>
 
-  <main>
-    <section class="welcome">
+    <div class="chats" id="chatList">
 
-      <h1>
-        أنا <span>وسيم</span>
-      </h1>
+      <div class="chat-date">
+        اليوم
+      </div>
 
-      <p>
-        مساعدك الذكي، من تطوير Wassim Bedir.
-        <br>
-        اسألني أي شيء وابدأ المحادثة.
-      </p>
+      <div class="chat active">
 
-      <div class="input-box">
-        <textarea
-          id="message"
-          placeholder="اكتب رسالتك هنا..."
-          rows="1"
-        ></textarea>
+        <div class="chat-icon">
+          💬
+        </div>
 
-        <button id="send">
-          ↑
+        <div class="chat-info">
+
+          <div class="chat-title">
+            مشروع Wassim AI
+          </div>
+
+          <div class="chat-preview">
+            مرحبًا وسيم...
+          </div>
+
+        </div>
+
+        <button class="chat-menu">
+          ⋮
         </button>
+
+      </div>
+
+      <div class="chat">
+
+        <div class="chat-icon">
+          💬
+        </div>
+
+        <div class="chat-info">
+
+          <div class="chat-title">
+            أفكار الرواية
+          </div>
+
+          <div class="chat-preview">
+            الفصل الجديد...
+          </div>
+
+        </div>
+
+        <button class="chat-menu">
+          ⋮
+        </button>
+
+      </div>
+
+      <div class="chat-date">
+        أمس
+      </div>
+
+      <div class="chat">
+
+        <div class="chat-icon">
+          💬
+        </div>
+
+        <div class="chat-info">
+
+          <div class="chat-title">
+            سؤال عن البرمجة
+          </div>
+
+          <div class="chat-preview">
+            كيف يمكنني...
+          </div>
+
+        </div>
+
+        <button class="chat-menu">
+          ⋮
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="sidebar-footer">
+
+      <div class="account">
+
+        <div class="avatar">
+          W
+        </div>
+
+        <div class="account-info">
+
+          <div class="account-name">
+            Wassim
+          </div>
+
+          <div class="account-status">
+            حساب شخصي
+          </div>
+
+        </div>
+
+        <div>
+          ⋮
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- OVERLAY MOBILE -->
+
+  <div class="overlay" id="overlay"></div>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="فتح القائمة"
+      >
+        ☰
+      </button>
+
+      <div class="current-chat" id="currentChat">
+        مشروع Wassim AI
+      </div>
+
+    </header>
+
+
+    <!-- MESSAGES -->
+
+    <section class="messages">
+
+      <div class="message-container" id="messages">
+
+        <!-- WELCOME -->
+
+        <div class="welcome" id="welcome">
+
+          <div class="welcome-content">
+
+            <div class="welcome-logo">
+              W
+            </div>
+
+            <h1>
+              أنا <span>وسيم</span>
+            </h1>
+
+            <p>
+              مساعدك الذكي.
+              <br>
+              ابدأ محادثة جديدة واكتب ما تريد.
+            </p>
+
+          </div>
+
+        </div>
+
       </div>
 
     </section>
+
+
+    <!-- INPUT -->
+
+    <div class="input-area">
+
+      <div class="input-wrapper">
+
+        <textarea
+          id="messageInput"
+          class="message-input"
+          placeholder="اكتب رسالتك إلى وسيم..."
+          rows="1"
+        ></textarea>
+
+        <button
+          id="sendButton"
+          class="send-button"
+          aria-label="إرسال"
+        >
+          ↑
+        </button>
+
+      </div>
+
+      <div class="disclaimer">
+        Wassim AI يمكن أن يخطئ. تحقق من المعلومات المهمة.
+      </div>
+
+    </div>
+
   </main>
 
-  <footer>
-    Wassim AI © 2026
-  </footer>
+</div>
 
-  <script>
-    const input = document.getElementById("message");
-    const send = document.getElementById("send");
 
-    send.addEventListener("click", () => {
-      const message = input.value.trim();
-
-      if (!message) return;
-
-      alert("Wassim AI: النظام الذكي سيتم ربطه في المرحلة القادمة.");
-
-      input.value = "";
-    });
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        send.click();
-      }
-    });
-  </script>
+<script src="app.js"></script>
 
 </body>
-</html>
+    </html>
