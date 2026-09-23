@@ -11,6 +11,60 @@
 </head>
 
 <body>
+  <!-- AUTH MODAL -->
+
+<div class="auth-overlay" id="authOverlay">
+
+  <div class="auth-box">
+
+    <div class="auth-logo">W</div>
+
+    <h2 id="authTitle">تسجيل الدخول</h2>
+
+    <p id="authSubtitle">
+      ادخل إلى مساحتك الأدبية.
+    </p>
+
+    <form id="authForm">
+
+      <input
+        type="text"
+        id="authUsername"
+        placeholder="اسم المستخدم"
+        autocomplete="username"
+        required
+      >
+
+      <input
+        type="password"
+        id="authPassword"
+        placeholder="كلمة المرور"
+        autocomplete="current-password"
+        required
+      >
+
+      <button type="submit" id="authSubmit">
+        دخول
+      </button>
+
+    </form>
+
+    <p
+      class="auth-error"
+      id="authError"
+    ></p>
+
+    <button
+      type="button"
+      class="auth-switch"
+      id="authSwitch"
+    >
+      ليس لديك حساب؟ إنشاء حساب
+    </button>
+
+  </div>
+
+</div>
 
 <div class="app">
 
