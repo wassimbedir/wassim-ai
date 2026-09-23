@@ -43,7 +43,6 @@ overlay?.addEventListener("click", closeSidebar);
    ========================================================= */
 
 function welcomeScreen() {
-
   messages.innerHTML = `
     <div class="welcome" id="welcome">
 
@@ -111,8 +110,38 @@ function welcomeScreen() {
     </div>
   `;
 
-  attachQuickActions();
+  messageInput.value = "";
+  autoResizeInput();
 }
+
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+/*
+   Event Delegation:
+   نخلي الأزرار تخدم سواء كانت موجودة من البداية
+   أو تم إنشاؤها لاحقًا بواسطة JavaScript.
+*/
+
+document.addEventListener("click", event => {
+
+  const button = event.target.closest(".quick-action");
+
+  if (!button) return;
+
+  const prompt = button.getAttribute("data-prompt");
+
+  if (!prompt) return;
+
+  messageInput.value = prompt;
+
+  messageInput.focus();
+
+  autoResizeInput();
+
+});
 
 
 /* =========================================================
@@ -129,39 +158,11 @@ newChatButton?.addEventListener("click", () => {
     chat.classList.remove("active");
   });
 
-  messageInput.value = "";
-
-  autoResizeInput();
-
   closeSidebar();
 
   messageInput.focus();
+
 });
-
-
-/* =========================================================
-   QUICK ACTIONS
-   ========================================================= */
-
-function attachQuickActions() {
-
-  document.querySelectorAll(".quick-action").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-      const prompt = button.getAttribute("data-prompt");
-
-      if (!prompt) return;
-
-      messageInput.value = prompt;
-
-      messageInput.focus();
-
-      autoResizeInput();
-    });
-
-  });
-}
 
 
 /* =========================================================
@@ -188,10 +189,6 @@ function sendMessage() {
 
   scrollToBottom();
 
-  /*
-   * رد تجريبي مؤقت.
-   * لاحقًا سنستبدله بعقل Wassim AI الحقيقي.
-   */
 
   setTimeout(() => {
 
@@ -203,11 +200,12 @@ function sendMessage() {
     scrollToBottom();
 
   }, 650);
+
 }
 
 
 /* =========================================================
-   DEMO LITERARY RESPONSE
+   DEMO AI RESPONSE
    ========================================================= */
 
 function generateLiteraryDemoResponse(text) {
@@ -223,6 +221,7 @@ function generateLiteraryDemoResponse(text) {
       أخبرني عن الفكرة أو الشعور الذي تريد أن تدور حوله
       القصيدة، وسأساعدك في بنائها.
     `;
+
   }
 
 
@@ -238,6 +237,7 @@ function generateLiteraryDemoResponse(text) {
       أعطني فكرتك، حتى لو كانت مجرد سطر واحد،
       وسنحوّلها إلى عالم وشخصيات وصراع وحبكة.
     `;
+
   }
 
 
@@ -253,6 +253,7 @@ function generateLiteraryDemoResponse(text) {
       أرسل النص، وسأحدد نقاط القوة والمشكلات
       ثم أقترح تعديلات تحافظ على صوتك.
     `;
+
   }
 
 
@@ -264,6 +265,7 @@ function generateLiteraryDemoResponse(text) {
     <br><br>
     اكتب فكرتك كما هي، حتى لو لم تكن مكتملة.
   `;
+
 }
 
 
@@ -277,47 +279,75 @@ function addMessage(type, text) {
 
   wrapper.className = `message ${type}`;
 
+
   const avatar = document.createElement("div");
 
   avatar.className = "message-avatar";
+
   avatar.textContent = "W";
+
 
   const content = document.createElement("div");
 
   content.className = "message-content";
 
+
   if (type === "user") {
+
     content.textContent = text;
+
   } else {
+
     content.innerHTML = text;
+
   }
 
+
   wrapper.appendChild(avatar);
+
   wrapper.appendChild(content);
 
   messages.appendChild(wrapper);
+
 }
 
 
 /* =========================================================
-   INPUT
+   SEND BUTTON
    ========================================================= */
 
-sendButton?.addEventListener("click", sendMessage);
+sendButton?.addEventListener(
+  "click",
+  sendMessage
+);
 
-messageInput?.addEventListener("keydown", event => {
 
-  if (
-    event.key === "Enter" &&
-    !event.shiftKey
-  ) {
+/* =========================================================
+   ENTER TO SEND
+   ========================================================= */
 
-    event.preventDefault();
+messageInput?.addEventListener(
+  "keydown",
+  event => {
 
-    sendMessage();
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+
+      event.preventDefault();
+
+      sendMessage();
+
+    }
+
   }
+);
 
-});
+
+/* =========================================================
+   AUTO RESIZE INPUT
+   ========================================================= */
 
 messageInput?.addEventListener(
   "input",
@@ -327,10 +357,16 @@ messageInput?.addEventListener(
 
 function autoResizeInput() {
 
+  if (!messageInput) return;
+
   messageInput.style.height = "auto";
 
   messageInput.style.height =
-    Math.min(messageInput.scrollHeight, 120) + "px";
+    Math.min(
+      messageInput.scrollHeight,
+      120
+    ) + "px";
+
 }
 
 
@@ -338,70 +374,89 @@ function autoResizeInput() {
    SEARCH
    ========================================================= */
 
-searchInput?.addEventListener("input", () => {
+searchInput?.addEventListener(
+  "input",
+  () => {
 
-  const query =
-    searchInput.value
-      .trim()
-      .toLowerCase();
+    const query =
+      searchInput.value
+        .trim()
+        .toLowerCase();
 
-  document.querySelectorAll(".chat").forEach(chat => {
 
-    const title =
-      chat.querySelector(".chat-title")
-        ?.textContent
-        .toLowerCase() || "";
+    document.querySelectorAll(".chat").forEach(chat => {
 
-    const preview =
-      chat.querySelector(".chat-preview")
-        ?.textContent
-        .toLowerCase() || "";
+      const title =
+        chat.querySelector(".chat-title")
+          ?.textContent
+          .toLowerCase() || "";
 
-    chat.style.display =
-      !query ||
-      title.includes(query) ||
-      preview.includes(query)
-        ? ""
-        : "none";
 
-  });
+      const preview =
+        chat.querySelector(".chat-preview")
+          ?.textContent
+          .toLowerCase() || "";
 
-});
+
+      chat.style.display =
+        !query ||
+        title.includes(query) ||
+        preview.includes(query)
+          ? ""
+          : "none";
+
+    });
+
+  }
+);
 
 
 /* =========================================================
-   CHAT SELECTION
+   CHAT LIST
    ========================================================= */
 
-chatList?.addEventListener("click", event => {
+chatList?.addEventListener(
+  "click",
+  event => {
 
-  const chat = event.target.closest(".chat");
+    const chat =
+      event.target.closest(".chat");
 
-  if (!chat) return;
+    if (!chat) return;
 
-  if (event.target.closest(".chat-menu")) {
-    return;
+    if (
+      event.target.closest(".chat-menu")
+    ) {
+      return;
+    }
+
+
+    document
+      .querySelectorAll(".chat")
+      .forEach(item => {
+        item.classList.remove("active");
+      });
+
+
+    chat.classList.add("active");
+
+
+    const title =
+      chat
+        .querySelector(".chat-title")
+        ?.textContent
+        .trim();
+
+
+    if (title) {
+      currentChat.textContent = title;
+    }
+
+
+    closeSidebar();
+
   }
-
-  document
-    .querySelectorAll(".chat")
-    .forEach(item => {
-      item.classList.remove("active");
-    });
-
-  chat.classList.add("active");
-
-  const title =
-    chat.querySelector(".chat-title")
-      ?.textContent
-      .trim();
-
-  if (title) {
-    currentChat.textContent = title;
-  }
-
-  closeSidebar();
-});
+);
 
 
 /* =========================================================
@@ -419,7 +474,13 @@ function scrollToBottom() {
 
 
 /* =========================================================
-   START
+   INITIALIZE
    ========================================================= */
 
-attachQuickActions();
+/*
+   مهم:
+   ما نستعملوش welcomeScreen() هنا حتى ما نمسحوش
+   المحتوى الموجود في HTML عند فتح الصفحة.
+*/
+
+autoResizeInput();
