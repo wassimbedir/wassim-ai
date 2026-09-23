@@ -1,7 +1,10 @@
 /* =========================================================
-   WASSIM AI — LITERARY BRAIN v1
-   شخصية أدبية قصيرة وطبيعية
+   WASSIM AI — REAL LITERARY CHAT
+   GitHub Pages → Render API → Groq
    ========================================================= */
+
+const API_URL = "https://wassim-ai-api.onrender.com";
+
 
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
@@ -20,22 +23,38 @@ const chatList = document.getElementById("chatList");
 
 
 /* =========================================================
+   CHAT MEMORY
+   ========================================================= */
+
+let conversationHistory = [];
+let conversationId = null;
+let isSending = false;
+
+
+/* =========================================================
    SIDEBAR
    ========================================================= */
 
 function openSidebar() {
+
   sidebar?.classList.add("open");
   overlay?.classList.add("show");
+
   document.body.style.overflow = "hidden";
 }
 
+
 function closeSidebar() {
+
   sidebar?.classList.remove("open");
   overlay?.classList.remove("show");
+
   document.body.style.overflow = "";
 }
 
+
 menuButton?.addEventListener("click", openSidebar);
+
 overlay?.addEventListener("click", closeSidebar);
 
 
@@ -46,11 +65,14 @@ overlay?.addEventListener("click", closeSidebar);
 function welcomeScreen() {
 
   messages.innerHTML = `
+
     <div class="welcome" id="welcome">
 
       <div class="welcome-content">
 
-        <div class="welcome-logo">W</div>
+        <div class="welcome-logo">
+          W
+        </div>
 
         <h1>
           أنا <span>وسيم</span>
@@ -76,6 +98,7 @@ function welcomeScreen() {
             <small>شعر وصور وإيقاع</small>
           </button>
 
+
           <button
             class="quick-action"
             data-prompt="أريد بناء رواية عن "
@@ -85,6 +108,7 @@ function welcomeScreen() {
             <small>فكرة وحبكة وشخصيات</small>
           </button>
 
+
           <button
             class="quick-action"
             data-prompt="أريد كتابة نص أدبي عن "
@@ -93,6 +117,7 @@ function welcomeScreen() {
             <strong>اكتب نصًا</strong>
             <small>أدب وخاطرة وقصة</small>
           </button>
+
 
           <button
             class="quick-action"
@@ -111,6 +136,7 @@ function welcomeScreen() {
   `;
 
   messageInput.value = "";
+
   autoResizeInput();
 }
 
@@ -121,11 +147,13 @@ function welcomeScreen() {
 
 document.addEventListener("click", event => {
 
-  const button = event.target.closest(".quick-action");
+  const button =
+    event.target.closest(".quick-action");
 
   if (!button) return;
 
-  const prompt = button.getAttribute("data-prompt");
+  const prompt =
+    button.getAttribute("data-prompt");
 
   if (!prompt) return;
 
@@ -144,13 +172,21 @@ document.addEventListener("click", event => {
 
 newChatButton?.addEventListener("click", () => {
 
+  conversationHistory = [];
+
+  conversationId = null;
+
   welcomeScreen();
 
   currentChat.textContent = "Wassim AI";
 
-  document.querySelectorAll(".chat").forEach(chat => {
-    chat.classList.remove("active");
-  });
+  document
+    .querySelectorAll(".chat")
+    .forEach(chat => {
+
+      chat.classList.remove("active");
+
+    });
 
   closeSidebar();
 
@@ -160,20 +196,29 @@ newChatButton?.addEventListener("click", () => {
 
 
 /* =========================================================
-   SEND
+   SEND MESSAGE
    ========================================================= */
 
-function sendMessage() {
+async function sendMessage() {
 
-  const text = messageInput.value.trim();
+  const text =
+    messageInput.value.trim();
 
-  if (!text) return;
+  if (!text || isSending) return;
 
-  const welcome = document.getElementById("welcome");
+
+  isSending = true;
+
+  sendButton.disabled = true;
+
+
+  const welcome =
+    document.getElementById("welcome");
 
   if (welcome) {
     welcome.remove();
   }
+
 
   addMessage("user", text);
 
@@ -185,197 +230,133 @@ function sendMessage() {
 
   showThinking();
 
-  setTimeout(() => {
+
+  try {
+
+    const response =
+      await fetch(`${API_URL}/chat`, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message: text,
+
+          messages: conversationHistory,
+
+          conversation_id: conversationId
+
+        })
+
+      });
+
+
+    const data =
+      await response.json();
+
 
     removeThinking();
 
-    addMessage(
-      "ai",
-      literaryResponse(text)
-    );
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        "حدث خطأ أثناء الاتصال بوسيم."
+      );
+
+    }
+
+
+    const reply =
+      data.reply || "ما وصلنيش رد.";
+
+
+    conversationId =
+      data.conversation_id || conversationId;
+
+
+    conversationHistory.push({
+
+      role: "user",
+
+      content: text
+
+    });
+
+
+    conversationHistory.push({
+
+      role: "assistant",
+
+      content: reply
+
+    });
+
+
+    addMessage("ai", formatAIResponse(reply));
 
     scrollToBottom();
 
-  }, 550);
+
+  } catch (error) {
+
+    removeThinking();
+
+    console.error(error);
+
+
+    addMessage(
+      "ai",
+      `
+        صار مشكل صغير في الاتصال.
+        <br><br>
+        جرّب تبعثها مرة أخرى.
+      `
+    );
+
+  }
+
+
+  isSending = false;
+
+  sendButton.disabled = false;
+
+  messageInput.focus();
 
 }
 
 
 /* =========================================================
-   LOCAL LITERARY BRAIN
+   FORMAT AI RESPONSE
    ========================================================= */
 
-function literaryResponse(text) {
+function formatAIResponse(text) {
 
-  const t = text.toLowerCase();
+  if (!text) return "";
 
+  return escapeHTML(text)
+    .replace(/\n/g, "<br>");
 
-  /* -----------------------------------------
-     GREETING
-     ----------------------------------------- */
-
-  if (
-    /^(السلام عليكم|سلام|مرحبا|مرحبًا|أهلا|أهلًا|هاي|hello|hi)/i.test(text)
-  ) {
-
-    return `
-      أهلًا. <br>
-      وش نكتب اليوم؟
-    `;
-
-  }
+}
 
 
-  /* -----------------------------------------
-     POETRY
-     ----------------------------------------- */
+/* =========================================================
+   HTML ESCAPE
+   ========================================================= */
 
-  if (
-    t.includes("قصيدة") ||
-    t.includes("شعر") ||
-    t.includes("بيت شعر")
-  ) {
+function escapeHTML(text) {
 
-    if (
-      t.includes("عن ") &&
-      text.trim().length > 25
-    ) {
+  const div =
+    document.createElement("div");
 
-      return `
-        إي، فهمت الفكرة. <br><br>
-        خلينا أولًا نحدد الجو: حزين، عاطفي، تأملي، ولا شيء مختلف؟
-      `;
+  div.textContent = text;
 
-    }
-
-    return `
-      أكيد. عطيني الفكرة أو الشعور فقط، وأنا نبدأ معك من هناك.
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     NOVEL
-     ----------------------------------------- */
-
-  if (
-    t.includes("رواية") ||
-    t.includes("حبكة") ||
-    t.includes("بطل") ||
-    t.includes("فصل")
-  ) {
-
-    return `
-      تمام. احكيلي الفكرة كما جاتك، حتى لو كانت ناقصة.
-      <br><br>
-      ما نحتاجوش نرتبوها من البداية.
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     CHARACTERS
-     ----------------------------------------- */
-
-  if (
-    t.includes("شخصية") ||
-    t.includes("شخصيات")
-  ) {
-
-    return `
-      خلينا ما نبدأوش بالاسم والعمر فقط.
-      <br><br>
-      قولي: واش أكثر حاجة تخاف تخسرها هذي الشخصية؟
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     CRITICISM
-     ----------------------------------------- */
-
-  if (
-    t.includes("حلل") ||
-    t.includes("حلّل") ||
-    t.includes("نقد") ||
-    t.includes("رأيك") ||
-    t.includes("قيّم")
-  ) {
-
-    return `
-      ابعثه كما هو. <br>
-      نقرأه أولًا، وبعدها نقولك وين القوة ووين عندي ملاحظات.
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     EDITING
-     ----------------------------------------- */
-
-  if (
-    t.includes("صحح") ||
-    t.includes("صحّح") ||
-    t.includes("عدّل") ||
-    t.includes("تعديل") ||
-    t.includes("صياغة")
-  ) {
-
-    return `
-      ابعث النص. <br>
-      ونشوف أولًا واش يحتاج فعلًا، ما نبدلش أسلوبك بلا سبب.
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     IDEA
-     ----------------------------------------- */
-
-  if (
-    t.includes("فكرة") ||
-    t.includes("عندي فكرة") ||
-    t.includes("فكرتي")
-  ) {
-
-    return `
-      قولها. حتى لو كانت ملخبطة. <br>
-      أحيانًا أحسن الأفكار تبدأ هكذا.
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     THANKS
-     ----------------------------------------- */
-
-  if (
-    t.includes("شكرا") ||
-    t.includes("شكرًا") ||
-    t.includes("مشكور")
-  ) {
-
-    return `
-      العفو. 🖤
-    `;
-
-  }
-
-
-  /* -----------------------------------------
-     DEFAULT
-     ----------------------------------------- */
-
-  return `
-    فهمتك. <br><br>
-    كمّل… أنا معك.
-  `;
+  return div.innerHTML;
 
 }
 
@@ -386,23 +367,37 @@ function literaryResponse(text) {
 
 function showThinking() {
 
-  if (document.getElementById("thinking")) return;
+  if (
+    document.getElementById("thinking")
+  ) {
+    return;
+  }
 
-  const wrapper = document.createElement("div");
 
-  wrapper.className = "message ai";
+  const wrapper =
+    document.createElement("div");
 
-  wrapper.id = "thinking";
+  wrapper.className =
+    "message ai";
+
+  wrapper.id =
+    "thinking";
+
 
   wrapper.innerHTML = `
-    <div class="message-avatar">W</div>
+
+    <div class="message-avatar">
+      W
+    </div>
 
     <div class="message-content">
       <span style="color:#777;">
         وسيم يفكر…
       </span>
     </div>
+
   `;
+
 
   messages.appendChild(wrapper);
 
@@ -442,7 +437,8 @@ function addMessage(type, text) {
   avatar.className =
     "message-avatar";
 
-  avatar.textContent = "W";
+  avatar.textContent =
+    "W";
 
 
   const content =
@@ -588,6 +584,7 @@ chatList?.addEventListener(
 
     if (!chat) return;
 
+
     if (
       event.target.closest(".chat-menu")
     ) {
@@ -598,7 +595,9 @@ chatList?.addEventListener(
     document
       .querySelectorAll(".chat")
       .forEach(item => {
+
         item.classList.remove("active");
+
       });
 
 
@@ -613,7 +612,10 @@ chatList?.addEventListener(
 
 
     if (title) {
-      currentChat.textContent = title;
+
+      currentChat.textContent =
+        title;
+
     }
 
 
@@ -630,8 +632,11 @@ chatList?.addEventListener(
 function scrollToBottom() {
 
   messages.scrollTo({
+
     top: messages.scrollHeight,
+
     behavior: "smooth"
+
   });
 
 }
