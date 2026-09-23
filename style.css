@@ -1,11 +1,17 @@
 /* =========================================================
-   WASSIM AI — RESPONSIVE LITERARY UI
+   WASSIM AI — LITERARY INTERFACE
+   Premium Black & Gold
+   ========================================================= */
+
+
+/* =========================================================
+   RESET
    ========================================================= */
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html,
@@ -15,14 +21,15 @@ body {
 }
 
 html {
-  overflow: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
-  overflow: hidden;
+  font-family: Arial, "Noto Sans Arabic", sans-serif;
   background: #050505;
-  color: #f5f5f5;
-  font-family: Arial, "Tahoma", sans-serif;
+  color: #eeeeee;
+  overflow: hidden;
+  direction: rtl;
 }
 
 button,
@@ -32,8 +39,13 @@ textarea {
 }
 
 button {
-  border: 0;
-  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+textarea,
+input {
+  outline: none;
 }
 
 
@@ -43,16 +55,15 @@ button {
 
 .app {
   width: 100%;
-  height: 100vh;
   height: 100dvh;
 
   display: flex;
 
   background:
     radial-gradient(
-      circle at 70% 15%,
-      rgba(212, 175, 55, 0.07),
-      transparent 35%
+      circle at 75% 20%,
+      rgba(212, 175, 55, 0.045),
+      transparent 30%
     ),
     #050505;
 }
@@ -63,51 +74,64 @@ button {
    ========================================================= */
 
 .sidebar {
-  width: 285px;
-  flex: 0 0 285px;
+  width: 270px;
   height: 100%;
+
+  flex-shrink: 0;
 
   display: flex;
   flex-direction: column;
 
-  background: #090909;
+  background:
+    linear-gradient(
+      180deg,
+      #0b0b0b 0%,
+      #080808 100%
+    );
 
-  border-left: 1px solid rgba(212, 175, 55, 0.13);
+  border-left: 1px solid rgba(255, 255, 255, 0.055);
 
   position: relative;
   z-index: 100;
-
-  transition: transform 0.3s ease;
 }
 
+
+/* =========================================================
+   SIDEBAR HEADER
+   ========================================================= */
+
 .sidebar-header {
-  width: 100%;
-  height: 64px;
-  flex: 0 0 64px;
+  height: 70px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 18px;
+  padding: 0 17px;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
 }
 
 .logo {
-  color: #f4f4f4;
   font-size: 19px;
-  font-weight: 700;
-  direction: ltr;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+
+  color: #eeeeee;
 }
 
 .logo span {
   color: #d4af37;
 }
 
+
+/* =========================================================
+   NEW CHAT
+   ========================================================= */
+
 .new-chat {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 
   display: flex;
   align-items: center;
@@ -118,11 +142,18 @@ button {
   background: rgba(212, 175, 55, 0.08);
   color: #d4af37;
 
-  font-size: 23px;
+  cursor: pointer;
+
+  font-size: 21px;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .new-chat:hover {
-  background: rgba(212, 175, 55, 0.15);
+  background: rgba(212, 175, 55, 0.16);
+  transform: scale(1.04);
 }
 
 
@@ -131,37 +162,36 @@ button {
    ========================================================= */
 
 .search {
-  width: 100%;
-  padding: 14px 14px 8px;
+  padding: 15px 14px 10px;
 }
 
 .search input {
   width: 100%;
-  height: 42px;
+  height: 40px;
 
-  display: block;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: #111111;
+  color: #eeeeee;
 
   padding: 0 13px;
 
-  outline: none;
-
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-
-  background: #111;
-  color: #fff;
-
   font-size: 13px;
 
-  direction: rtl;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
 }
 
 .search input::placeholder {
-  color: #777;
+  color: #777777;
 }
 
 .search input:focus {
-  border-color: rgba(212, 175, 55, 0.45);
+  border-color: rgba(212, 175, 55, 0.35);
+  background: #141414;
 }
 
 
@@ -171,51 +201,81 @@ button {
 
 .chats {
   flex: 1;
-  min-height: 0;
 
   overflow-y: auto;
 
-  padding: 8px 10px;
+  padding: 5px 9px 15px;
+}
+
+.chats::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chats::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
 }
 
 .chat-date {
-  padding: 12px 10px 7px;
+  padding: 13px 9px 7px;
 
-  color: #666;
+  color: #666666;
 
   font-size: 11px;
+  font-weight: 700;
 }
+
+
+/* =========================================================
+   CHAT ITEM
+   ========================================================= */
 
 .chat {
   width: 100%;
-  min-height: 62px;
+
+  min-height: 58px;
 
   display: flex;
   align-items: center;
 
   gap: 10px;
 
-  padding: 9px 10px;
+  padding: 9px 9px;
 
-  border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 10px;
 
   cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 }
 
 .chat:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .chat.active {
-  background: rgba(212, 175, 55, 0.08);
-  border-color: rgba(212, 175, 55, 0.12);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(212, 175, 55, 0.12),
+      rgba(212, 175, 55, 0.035)
+    );
+
+  border-right: 2px solid #d4af37;
 }
 
+
+/* =========================================================
+   CHAT ICON
+   ========================================================= */
+
 .chat-icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+  width: 32px;
+  height: 32px;
+
+  min-width: 32px;
 
   display: flex;
   align-items: center;
@@ -225,16 +285,21 @@ button {
 
   background: #151515;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
+
+/* =========================================================
+   CHAT INFO
+   ========================================================= */
+
 .chat-info {
-  flex: 1;
   min-width: 0;
+  flex: 1;
 }
 
 .chat-title {
-  color: #eee;
+  color: #dddddd;
 
   font-size: 13px;
   font-weight: 600;
@@ -245,9 +310,9 @@ button {
 }
 
 .chat-preview {
-  margin-top: 5px;
+  margin-top: 4px;
 
-  color: #666;
+  color: #666666;
 
   font-size: 11px;
 
@@ -256,21 +321,27 @@ button {
   text-overflow: ellipsis;
 }
 
+
+/* =========================================================
+   CHAT MENU
+   ========================================================= */
+
 .chat-menu {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 25px;
+  height: 25px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 7px;
+  flex-shrink: 0;
 
   background: transparent;
-  color: #666;
+  color: #666666;
 
-  font-size: 18px;
+  cursor: pointer;
+
+  border-radius: 6px;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
 }
 
 .chat-menu:hover {
@@ -284,29 +355,31 @@ button {
    ========================================================= */
 
 .sidebar-footer {
-  width: 100%;
-
   padding: 12px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
 }
 
 .account {
-  width: 100%;
-  min-height: 52px;
-
   display: flex;
   align-items: center;
 
   gap: 10px;
 
-  padding: 6px 8px;
+  padding: 8px;
+
+  border-radius: 10px;
+
+  transition: background 0.2s ease;
+}
+
+.account:hover {
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
   align-items: center;
@@ -318,12 +391,13 @@ button {
     linear-gradient(
       135deg,
       #d4af37,
-      #8e7020
+      #8d701f
     );
 
   color: #050505;
 
-  font-weight: 800;
+  font-weight: 900;
+  font-size: 13px;
 }
 
 .account-info {
@@ -332,15 +406,38 @@ button {
 }
 
 .account-name {
+  color: #eeeeee;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .account-status {
   margin-top: 3px;
 
-  color: #666;
+  color: #666666;
   font-size: 10px;
+}
+
+
+/* =========================================================
+   MOBILE OVERLAY
+   ========================================================= */
+
+.overlay {
+  display: none;
+
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.62);
+
+  backdrop-filter: blur(3px);
+
+  z-index: 90;
+}
+
+.overlay.show {
+  display: block;
 }
 
 
@@ -349,74 +446,68 @@ button {
    ========================================================= */
 
 .main {
-  flex: 1;
   min-width: 0;
   min-height: 0;
 
-  height: 100%;
+  flex: 1;
 
   display: flex;
   flex-direction: column;
 
-  overflow: hidden;
-
   background:
     radial-gradient(
-      circle at 50% 35%,
-      rgba(212, 175, 55, 0.035),
-      transparent 45%
+      circle at 50% -20%,
+      rgba(212, 175, 55, 0.055),
+      transparent 40%
     ),
     #050505;
 }
 
 
 /* =========================================================
-   TOP BAR
+   TOPBAR
    ========================================================= */
 
 .topbar {
-  width: 100%;
   height: 62px;
-  min-height: 62px;
-  flex: 0 0 62px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
 
-  padding: 0 22px;
+  padding: 0 20px;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
 
-  background: #070707;
+  background: rgba(5, 5, 5, 0.88);
 
-  position: relative;
-  z-index: 10;
-}
+  backdrop-filter: blur(14px);
 
-.current-chat {
-  color: #e9e9e9;
-
-  font-size: 14px;
-  font-weight: 600;
+  z-index: 20;
 }
 
 .menu-button {
   display: none;
 
-  width: 40px;
-  height: 40px;
-
-  align-items: center;
-  justify-content: center;
+  width: 38px;
+  height: 38px;
 
   margin-left: 10px;
 
-  border-radius: 10px;
+  border-radius: 9px;
 
-  background: rgba(212, 175, 55, 0.08);
-  color: #d4af37;
+  background: #111111;
+  color: #cccccc;
 
-  font-size: 20px;
+  cursor: pointer;
+}
+
+.current-chat {
+  color: #dddddd;
+
+  font-size: 14px;
+  font-weight: 600;
 }
 
 
@@ -426,14 +517,30 @@ button {
 
 .messages {
   flex: 1;
-  min-width: 0;
+
   min-height: 0;
 
   overflow-y: auto;
   overflow-x: hidden;
 
-  padding: 20px;
+  padding: 25px 20px 20px;
+
+  scroll-behavior: smooth;
 }
+
+.messages::-webkit-scrollbar {
+  width: 5px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.18);
+  border-radius: 20px;
+}
+
+
+/* =========================================================
+   MESSAGE CONTAINER
+   ========================================================= */
 
 .message-container {
   width: 100%;
@@ -441,10 +548,6 @@ button {
 
   display: flex;
   flex-direction: column;
-
-  justify-content: flex-start;
-
-  padding: 10px 0 20px;
 }
 
 
@@ -454,55 +557,66 @@ button {
 
 .welcome {
   width: 100%;
+
   min-height: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  text-align: center;
-
-  padding: 20px 10px;
+  padding: 35px 10px;
 }
 
 .welcome-content {
-  width: min(100%, 600px);
+  width: 100%;
+  max-width: 720px;
+
+  text-align: center;
 }
 
-.welcome-logo {
-  width: clamp(64px, 10vw, 88px);
-  height: clamp(64px, 10vw, 88px);
 
-  margin: 0 auto 24px;
+/* =========================================================
+   WELCOME LOGO
+   ========================================================= */
+
+.welcome-logo {
+  width: 72px;
+  height: 72px;
+
+  margin: 0 auto 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 24%;
+  border-radius: 22px;
 
   background:
     linear-gradient(
       135deg,
       #d4af37,
-      #927321
+      #a98425
     );
 
   color: #050505;
 
-  font-size: clamp(30px, 5vw, 42px);
+  font-family: Georgia, serif;
+
+  font-size: 34px;
   font-weight: 900;
 
   box-shadow:
-    0 0 40px rgba(212, 175, 55, 0.14);
+    0 12px 40px rgba(212, 175, 55, 0.12);
 }
 
 .welcome h1 {
+  font-size: clamp(28px, 5vw, 40px);
+
+  font-weight: 800;
+
+  color: #eeeeee;
+
   margin-bottom: 12px;
-
-  color: #f5f5f5;
-
-  font-size: clamp(28px, 4vw, 42px);
 }
 
 .welcome h1 span {
@@ -510,24 +624,23 @@ button {
 }
 
 .welcome-subtitle {
-  margin-top: 2px;
+  color: #dddddd;
 
-  color: #d4af37;
+  font-size: 17px;
 
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.6;
+  margin-bottom: 9px;
 }
 
 .welcome-description {
-  max-width: 520px;
+  max-width: 570px;
 
-  margin: 8px auto 0;
+  margin: 0 auto;
 
-  color: #777;
+  color: #777777;
 
   font-size: 13px;
-  line-height: 1.8;
+
+  line-height: 1.9;
 }
 
 
@@ -536,97 +649,81 @@ button {
    ========================================================= */
 
 .quick-actions {
-  width: min(100%, 650px);
+  width: 100%;
 
-  margin: 28px auto 0;
+  margin-top: 30px;
 
   display: grid;
 
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
   gap: 10px;
 }
 
 .quick-action {
-  min-height: 76px;
+  min-height: 120px;
 
-  display: grid;
+  padding: 17px 12px;
 
-  grid-template-columns: 38px 1fr;
-  grid-template-rows: auto auto;
-
-  column-gap: 10px;
-
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 
-  padding: 12px 14px;
+  gap: 6px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.055);
 
   background:
     linear-gradient(
-      145deg,
-      rgba(255,255,255,0.035),
-      rgba(255,255,255,0.015)
+      180deg,
+      #111111,
+      #0b0b0b
     );
 
-  color: #fff;
+  color: #dddddd;
 
-  text-align: right;
+  cursor: pointer;
 
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .quick-action:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 
-  border-color: rgba(212, 175, 55, 0.35);
+  border-color: rgba(212, 175, 55, 0.3);
 
   background:
     linear-gradient(
-      145deg,
-      rgba(212,175,55,0.10),
-      rgba(255,255,255,0.02)
+      180deg,
+      #151515,
+      #0c0c0c
     );
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .quick-action span {
-  grid-row: 1 / 3;
-
-  width: 38px;
-  height: 38px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  background: rgba(212,175,55,0.08);
-
-  font-size: 18px;
+  font-size: 23px;
 }
 
 .quick-action strong {
-  align-self: end;
-
-  color: #eee;
+  color: #eeeeee;
 
   font-size: 12px;
 }
 
 .quick-action small {
-  align-self: start;
+  color: #666666;
 
-  margin-top: 3px;
-
-  color: #666;
-
-  font-size: 9px;
+  font-size: 10px;
 }
 
 
@@ -636,40 +733,43 @@ button {
 
 .message {
   width: 100%;
+  max-width: 900px;
 
   display: flex;
 
-  margin: 8px auto;
-
   gap: 10px;
 
-  max-width: 900px;
+  margin: 8px auto;
+
+  direction: ltr;
 }
 
 
-/* USER — RIGHT */
+/* =========================================================
+   USER MESSAGE — RIGHT
+   ========================================================= */
 
 .message.user {
   justify-content: flex-start;
 
   flex-direction: row-reverse;
-
-  text-align: right;
 }
 
 
-/* AI — LEFT */
+/* =========================================================
+   AI MESSAGE — LEFT
+   ========================================================= */
 
 .message.ai {
   justify-content: flex-start;
 
   flex-direction: row;
-
-  text-align: left;
 }
 
 
-/* AVATAR */
+/* =========================================================
+   MESSAGE AVATAR
+   ========================================================= */
 
 .message-avatar {
   width: 34px;
@@ -694,10 +794,14 @@ button {
 
   font-size: 12px;
   font-weight: 900;
+
+  flex-shrink: 0;
 }
 
 
-/* MESSAGE BODY */
+/* =========================================================
+   MESSAGE CONTENT
+   ========================================================= */
 
 .message-content {
   max-width: min(75%, 650px);
@@ -707,6 +811,7 @@ button {
   border-radius: 16px;
 
   font-size: 14px;
+
   line-height: 1.8;
 
   word-break: break-word;
@@ -714,7 +819,9 @@ button {
 }
 
 
-/* USER BUBBLE */
+/* =========================================================
+   USER BUBBLE
+   ========================================================= */
 
 .message.user .message-content {
   background:
@@ -728,14 +835,17 @@ button {
 
   border-top-right-radius: 5px;
 
+  direction: rtl;
   text-align: right;
 }
 
 
-/* AI RESPONSE */
+/* =========================================================
+   AI BUBBLE
+   ========================================================= */
 
 .message.ai .message-content {
-  background: #111;
+  background: #111111;
 
   color: #e9e9e9;
 
@@ -743,134 +853,138 @@ button {
 
   border-top-left-radius: 5px;
 
-  text-align: left;
-}
-
-
-/* AI CONTENT WITH ARABIC */
-
-.message.ai .message-content {
-  direction: rtl;
-  text-align: right;
-}
-
-
-/* USER CONTENT */
-
-.message.user .message-content {
   direction: rtl;
   text-align: right;
 }
 
 
 /* =========================================================
-   INPUT
+   INPUT AREA
    ========================================================= */
 
 .input-area {
-  width: 100%;
   flex: 0 0 auto;
 
+  width: 100%;
+
   padding:
-    12px
-    clamp(12px, 3vw, 28px)
-    max(12px, env(safe-area-inset-bottom));
+    10px
+    20px
+    max(14px, env(safe-area-inset-bottom));
 
   background:
     linear-gradient(
       180deg,
-      rgba(5,5,5,0),
-      #050505 30%
+      rgba(5, 5, 5, 0.7),
+      #050505 35%
     );
 
-  position: relative;
-  z-index: 20;
+  border-top: 1px solid rgba(255, 255, 255, 0.035);
 }
 
-.input-wrapper {
-  width: min(100%, 780px);
 
-  min-height: 58px;
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.input-wrapper {
+  width: 100%;
+  max-width: 900px;
 
   margin: 0 auto;
 
+  min-height: 52px;
+
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
-  gap: 10px;
+  gap: 8px;
 
-  padding: 7px 8px 7px 16px;
+  padding: 7px;
 
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 18px;
+  border-radius: 15px;
 
-  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: #101010;
 
   box-shadow:
-    0 8px 30px rgba(0,0,0,0.35);
+    0 8px 30px rgba(0, 0, 0, 0.28);
 
-  direction: rtl;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .input-wrapper:focus-within {
-  border-color: rgba(212,175,55,0.45);
+  border-color: rgba(212, 175, 55, 0.35);
 
   box-shadow:
-    0 0 0 3px rgba(212,175,55,0.05),
-    0 8px 30px rgba(0,0,0,0.35);
+    0 8px 35px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(212, 175, 55, 0.05);
 }
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
 
 .message-input {
   flex: 1;
 
   width: 100%;
-  min-width: 0;
 
-  height: 42px;
-  min-height: 42px;
+  min-height: 38px;
   max-height: 120px;
-
-  display: block;
-
-  padding: 9px 4px;
 
   resize: none;
 
-  border: 0;
-  outline: 0;
+  border: none;
 
   background: transparent;
 
-  color: #fff;
+  color: #eeeeee;
 
-  font-family: Arial, "Tahoma", sans-serif;
+  padding: 8px 10px;
+
   font-size: 14px;
-  line-height: 24px;
 
-  text-align: right;
+  line-height: 1.6;
+
   direction: rtl;
+  text-align: right;
+
+  overflow-y: auto;
 }
 
 .message-input::placeholder {
-  color: #666;
+  color: #666666;
 }
 
+.message-input::-webkit-scrollbar {
+  width: 3px;
+}
+
+.message-input::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.2);
+}
+
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
+
 .send-button {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
 
-  min-width: 42px;
-  min-height: 42px;
-
-  flex: 0 0 42px;
+  min-width: 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 0;
-
-  border-radius: 12px;
+  border-radius: 11px;
 
   background:
     linear-gradient(
@@ -881,18 +995,33 @@ button {
 
   color: #050505;
 
-  font-size: 22px;
+  cursor: pointer;
+
+  font-size: 21px;
   font-weight: 900;
 
-  direction: ltr;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.send-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
 }
 
 .send-button:active {
-  transform: scale(0.95);
+  transform: scale(0.94);
 }
 
+
+/* =========================================================
+   DISCLAIMER
+   ========================================================= */
+
 .disclaimer {
-  width: min(100%, 780px);
+  width: 100%;
+  max-width: 900px;
 
   margin: 7px auto 0;
 
@@ -900,47 +1029,9 @@ button {
 
   color: #4f4f4f;
 
-  font-size: 10px;
-  line-height: 14px;
-}
+  font-size: 9px;
 
-
-/* =========================================================
-   OVERLAY
-   ========================================================= */
-
-.overlay {
-  display: none;
-
-  position: fixed;
-
-  inset: 0;
-
-  background: rgba(0,0,0,0.65);
-
-  z-index: 90;
-}
-
-.overlay.show {
-  display: block;
-}
-
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(212,175,55,0.18);
-  border-radius: 10px;
+  line-height: 1.4;
 }
 
 
@@ -955,14 +1046,16 @@ button {
 
     top: 0;
     right: 0;
-    bottom: 0;
 
-    width: min(86vw, 320px);
+    width: min(82vw, 300px);
 
     transform: translateX(105%);
 
+    transition:
+      transform 0.25s ease;
+
     box-shadow:
-      -20px 0 50px rgba(0,0,0,0.45);
+      -15px 0 50px rgba(0, 0, 0, 0.45);
   }
 
   .sidebar.open {
@@ -971,22 +1064,48 @@ button {
 
   .menu-button {
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .topbar {
-    height: 58px;
-    min-height: 58px;
-    flex-basis: 58px;
+    height: 56px;
 
     padding: 0 12px;
   }
 
   .messages {
-    padding: 10px;
+    padding:
+      16px
+      12px
+      12px;
+  }
+
+  .input-area {
+    padding:
+      8px
+      10px
+      max(10px, env(safe-area-inset-bottom));
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 8px;
+
+    margin-top: 24px;
+  }
+
+  .quick-action {
+    min-height: 105px;
   }
 
   .message {
+    width: 100%;
+
     margin: 7px 0;
+
+    direction: ltr;
   }
 
   .message-content {
@@ -995,6 +1114,7 @@ button {
     padding: 10px 12px;
 
     font-size: 13px;
+
     line-height: 1.75;
   }
 
@@ -1006,109 +1126,28 @@ button {
   }
 
   .welcome {
-    padding: 16px 8px;
+    padding: 25px 5px;
   }
 
   .welcome-logo {
-    width: 68px;
-    height: 68px;
+    width: 62px;
+    height: 62px;
 
-    margin-bottom: 18px;
+    border-radius: 19px;
 
-    font-size: 30px;
-  }
-
-  .welcome h1 {
-    font-size: 28px;
+    font-size: 29px;
   }
 
   .welcome-subtitle {
-    font-size: 14px;
-  }
-
-  .welcome-description {
-    max-width: 330px;
-
-    font-size: 11px;
-  }
-
-  .quick-actions {
-    margin-top: 20px;
-
-    gap: 8px;
-  }
-
-  .quick-action {
-    min-height: 68px;
-
-    grid-template-columns: 32px 1fr;
-
-    padding: 9px 10px;
-
-    border-radius: 12px;
-  }
-
-  .quick-action span {
-    width: 32px;
-    height: 32px;
-
     font-size: 15px;
   }
 
-  .quick-action strong {
-    font-size: 10px;
+  .welcome-description {
+    font-size: 12px;
+
+    line-height: 1.8;
   }
 
-  .quick-action small {
-    font-size: 8px;
-  }
-
-  .input-area {
-    padding:
-      8px
-      10px
-      max(9px, env(safe-area-inset-bottom));
-  }
-
-  .input-wrapper {
-    min-height: 54px;
-
-    padding: 6px 6px 6px 12px;
-
-    gap: 8px;
-
-    border-radius: 16px;
-  }
-
-  .message-input {
-    height: 40px;
-    min-height: 40px;
-
-    padding: 8px 3px;
-
-    font-size: 14px;
-  }
-
-  .send-button {
-    width: 38px;
-    height: 38px;
-
-    min-width: 38px;
-    min-height: 38px;
-
-    flex-basis: 38px;
-
-    border-radius: 11px;
-
-    font-size: 20px;
-  }
-
-  .disclaimer {
-    margin-top: 5px;
-
-    font-size: 9px;
-    line-height: 12px;
-  }
 }
 
 
@@ -1116,60 +1155,124 @@ button {
    SMALL PHONES
    ========================================================= */
 
-@media (max-width: 380px) {
+@media (max-width: 430px) {
+
+  .current-chat {
+    font-size: 13px;
+  }
+
+  .welcome h1 {
+    font-size: 29px;
+  }
+
+  .quick-action {
+    min-height: 95px;
+
+    padding: 12px 8px;
+  }
+
+  .quick-action span {
+    font-size: 20px;
+  }
+
+  .quick-action strong {
+    font-size: 11px;
+  }
+
+  .quick-action small {
+    font-size: 9px;
+  }
 
   .message-content {
     max-width: 84%;
 
-    font-size: 12px;
+    font-size: 12.5px;
   }
 
-  .message-avatar {
-    width: 29px;
-    height: 29px;
+  .input-wrapper {
+    min-height: 49px;
 
-    min-width: 29px;
+    border-radius: 14px;
+
+    padding: 6px;
   }
 
-  .disclaimer {
-    display: none;
+  .message-input {
+    font-size: 13px;
+
+    padding: 7px 8px;
   }
+
+  .send-button {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+  }
+
 }
 
 
 /* =========================================================
-   SHORT PHONES
+   VERY SMALL PHONES
    ========================================================= */
 
-@media (max-height: 680px) {
+@media (max-width: 350px) {
 
-  .topbar {
-    height: 52px;
-    min-height: 52px;
-    flex-basis: 52px;
+  .quick-actions {
+    grid-template-columns: 1fr;
   }
 
-  .welcome-logo {
-    width: 54px;
-    height: 54px;
+  .quick-action {
+    min-height: 70px;
 
-    margin-bottom: 12px;
+    flex-direction: row;
 
-    font-size: 25px;
+    justify-content: flex-start;
+
+    padding: 10px 14px;
+
+    text-align: right;
   }
 
-  .welcome h1 {
-    font-size: 24px;
-
-    margin-bottom: 7px;
+  .quick-action span {
+    font-size: 19px;
   }
 
-  .welcome p {
-    font-size: 11px;
-    line-height: 1.5;
+  .message-content {
+    max-width: 80%;
   }
 
-  .disclaimer {
-    display: none;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(212, 175, 55, 0.6);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+
+    animation-duration: 0.01ms !important;
   }
+
    }
