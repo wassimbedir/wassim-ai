@@ -1,5 +1,5 @@
 /* =========================================================
-   WASSIM AI — LITERARY ASSISTANT
+   WASSIM AI — LITERARY CHAT
    ========================================================= */
 
 const sidebar = document.getElementById("sidebar");
@@ -23,16 +23,14 @@ const chatList = document.getElementById("chatList");
    ========================================================= */
 
 function openSidebar() {
-  sidebar.classList.add("open");
-  overlay.classList.add("show");
-
+  sidebar?.classList.add("open");
+  overlay?.classList.add("show");
   document.body.style.overflow = "hidden";
 }
 
 function closeSidebar() {
-  sidebar.classList.remove("open");
-  overlay.classList.remove("show");
-
+  sidebar?.classList.remove("open");
+  overlay?.classList.remove("show");
   document.body.style.overflow = "";
 }
 
@@ -41,10 +39,10 @@ overlay?.addEventListener("click", closeSidebar);
 
 
 /* =========================================================
-   NEW CHAT
+   WELCOME SCREEN
    ========================================================= */
 
-newChatButton?.addEventListener("click", () => {
+function welcomeScreen() {
 
   messages.innerHTML = `
     <div class="welcome" id="welcome">
@@ -70,25 +68,37 @@ newChatButton?.addEventListener("click", () => {
 
         <div class="quick-actions">
 
-          <button class="quick-action" data-prompt="اكتب لي قصيدة عن">
+          <button
+            class="quick-action"
+            data-prompt="أريد كتابة قصيدة عن "
+          >
             <span>🪶</span>
             <strong>اكتب قصيدة</strong>
             <small>شعر وصور وإيقاع</small>
           </button>
 
-          <button class="quick-action" data-prompt="ساعدني في بناء رواية عن">
+          <button
+            class="quick-action"
+            data-prompt="أريد بناء رواية عن "
+          >
             <span>📖</span>
             <strong>ابنِ رواية</strong>
             <small>فكرة وحبكة وشخصيات</small>
           </button>
 
-          <button class="quick-action" data-prompt="ساعدني في كتابة نص أدبي عن">
+          <button
+            class="quick-action"
+            data-prompt="أريد كتابة نص أدبي عن "
+          >
             <span>✒️</span>
             <strong>اكتب نصًا</strong>
             <small>أدب وخاطرة وقصة</small>
           </button>
 
-          <button class="quick-action" data-prompt="حلّل هذا النص أدبيًا:">
+          <button
+            class="quick-action"
+            data-prompt="أريد تحليل هذا النص أدبيًا: "
+          >
             <span>🔍</span>
             <strong>حلّل نصي</strong>
             <small>نقد وتحسين وتحرير</small>
@@ -101,6 +111,18 @@ newChatButton?.addEventListener("click", () => {
     </div>
   `;
 
+  attachQuickActions();
+}
+
+
+/* =========================================================
+   NEW CHAT
+   ========================================================= */
+
+newChatButton?.addEventListener("click", () => {
+
+  welcomeScreen();
+
   currentChat.textContent = "Wassim AI";
 
   document.querySelectorAll(".chat").forEach(chat => {
@@ -109,9 +131,9 @@ newChatButton?.addEventListener("click", () => {
 
   messageInput.value = "";
 
-  closeSidebar();
+  autoResizeInput();
 
-  attachQuickActions();
+  closeSidebar();
 
   messageInput.focus();
 });
@@ -127,7 +149,9 @@ function attachQuickActions() {
 
     button.addEventListener("click", () => {
 
-      const prompt = button.dataset.prompt;
+      const prompt = button.getAttribute("data-prompt");
+
+      if (!prompt) return;
 
       messageInput.value = prompt;
 
@@ -137,10 +161,7 @@ function attachQuickActions() {
     });
 
   });
-
 }
-
-attachQuickActions();
 
 
 /* =========================================================
@@ -168,9 +189,8 @@ function sendMessage() {
   scrollToBottom();
 
   /*
-   * مؤقتًا:
-   * هذه مجرد شخصية تجريبية للواجهة.
-   * لاحقًا سنربطها بالمحرك الأدبي الحقيقي.
+   * رد تجريبي مؤقت.
+   * لاحقًا سنستبدله بعقل Wassim AI الحقيقي.
    */
 
   setTimeout(() => {
@@ -187,24 +207,21 @@ function sendMessage() {
 
 
 /* =========================================================
-   LITERARY DEMO BRAIN
+   DEMO LITERARY RESPONSE
    ========================================================= */
 
 function generateLiteraryDemoResponse(text) {
 
-  const lower = text.toLowerCase();
-
   if (
     text.includes("قصيدة") ||
-    text.includes("شعر") ||
-    text.includes("شاعر")
+    text.includes("شعر")
   ) {
 
     return `
       <strong>🪶 لنكتبها معًا.</strong>
       <br><br>
-      أخبرني فقط عن الفكرة أو الشعور الذي تريد أن تدور حوله القصيدة،
-      وسأساعدك في بناء النص والصور والقافية والأسلوب.
+      أخبرني عن الفكرة أو الشعور الذي تريد أن تدور حوله
+      القصيدة، وسأساعدك في بنائها.
     `;
   }
 
@@ -216,10 +233,10 @@ function generateLiteraryDemoResponse(text) {
   ) {
 
     return `
-      <strong>📖 فكرة الرواية هي البداية فقط.</strong>
+      <strong>📖 لنبدأ من الفكرة.</strong>
       <br><br>
-      أعطني الفكرة التي لديك، حتى لو كانت سطرًا واحدًا،
-      وسنحوّلها إلى عالم وشخصيات وصراع وحبكة مترابطة.
+      أعطني فكرتك، حتى لو كانت مجرد سطر واحد،
+      وسنحوّلها إلى عالم وشخصيات وصراع وحبكة.
     `;
   }
 
@@ -233,32 +250,17 @@ function generateLiteraryDemoResponse(text) {
     return `
       <strong>🔍 سأقرأ النص ككاتب وناقد.</strong>
       <br><br>
-      أرسل النص، وسأفصل بين نقاط القوة والمشكلات الفعلية،
-      ثم أقترح تعديلات تحافظ على صوتك أنت.
-    `;
-  }
-
-
-  if (
-    text.includes("اكتب") ||
-    text.includes("نص")
-  ) {
-
-    return `
-      <strong>✒️ لنبدأ من الفكرة.</strong>
-      <br><br>
-      أعطني الموضوع، الشعور، المشهد أو حتى جملة واحدة،
-      وسأساعدك على تحويلها إلى نص أدبي متماسك.
+      أرسل النص، وسأحدد نقاط القوة والمشكلات
+      ثم أقترح تعديلات تحافظ على صوتك.
     `;
   }
 
 
   return `
-    <strong>أفهمك.</strong>
+    <strong>أهلًا بك في Wassim AI.</strong>
     <br><br>
-    أنا Wassim AI، مساعدك المتخصص في الأدب والكتابة.
-    يمكننا العمل على الشعر، الروايات، القصص، الشخصيات،
-    الأسلوب، النقد والتحرير.
+    أنا مساعدك الأدبي المتخصص في الشعر والروايات
+    والقصص والكتابة والنقد والتحرير.
     <br><br>
     اكتب فكرتك كما هي، حتى لو لم تكن مكتملة.
   `;
@@ -275,27 +277,35 @@ function addMessage(type, text) {
 
   wrapper.className = `message ${type}`;
 
-  wrapper.innerHTML = `
-    <div class="message-avatar">
-      ${type === "user" ? "W" : "W"}
-    </div>
+  const avatar = document.createElement("div");
 
-    <div class="message-content">
-      ${type === "user" ? escapeHTML(text) : text}
-    </div>
-  `;
+  avatar.className = "message-avatar";
+  avatar.textContent = "W";
+
+  const content = document.createElement("div");
+
+  content.className = "message-content";
+
+  if (type === "user") {
+    content.textContent = text;
+  } else {
+    content.innerHTML = text;
+  }
+
+  wrapper.appendChild(avatar);
+  wrapper.appendChild(content);
 
   messages.appendChild(wrapper);
 }
 
 
 /* =========================================================
-   SEND EVENTS
+   INPUT
    ========================================================= */
 
 sendButton?.addEventListener("click", sendMessage);
 
-messageInput?.addEventListener("keydown", (event) => {
+messageInput?.addEventListener("keydown", event => {
 
   if (
     event.key === "Enter" &&
@@ -309,10 +319,11 @@ messageInput?.addEventListener("keydown", (event) => {
 
 });
 
+messageInput?.addEventListener(
+  "input",
+  autoResizeInput
+);
 
-/* =========================================================
-   AUTO RESIZE
-   ========================================================= */
 
 function autoResizeInput() {
 
@@ -321,11 +332,6 @@ function autoResizeInput() {
   messageInput.style.height =
     Math.min(messageInput.scrollHeight, 120) + "px";
 }
-
-messageInput?.addEventListener(
-  "input",
-  autoResizeInput
-);
 
 
 /* =========================================================
@@ -357,6 +363,7 @@ searchInput?.addEventListener("input", () => {
       preview.includes(query)
         ? ""
         : "none";
+
   });
 
 });
@@ -366,15 +373,13 @@ searchInput?.addEventListener("input", () => {
    CHAT SELECTION
    ========================================================= */
 
-chatList?.addEventListener("click", (event) => {
+chatList?.addEventListener("click", event => {
 
   const chat = event.target.closest(".chat");
 
   if (!chat) return;
 
-  if (
-    event.target.closest(".chat-menu")
-  ) {
+  if (event.target.closest(".chat-menu")) {
     return;
   }
 
@@ -414,14 +419,7 @@ function scrollToBottom() {
 
 
 /* =========================================================
-   SECURITY
+   START
    ========================================================= */
 
-function escapeHTML(value) {
-
-  const div = document.createElement("div");
-
-  div.textContent = value;
-
-  return div.innerHTML;
-}
+attachQuickActions();
