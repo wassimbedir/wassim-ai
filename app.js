@@ -1,8 +1,13 @@
+/* =========================================================
+   WASSIM AI — LITERARY ASSISTANT
+   ========================================================= */
+
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
-const menuButton = document.getElementById("menuButton");
 
+const menuButton = document.getElementById("menuButton");
 const newChatButton = document.getElementById("newChat");
+
 const messageInput = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 
@@ -13,34 +18,37 @@ const searchInput = document.getElementById("searchInput");
 const chatList = document.getElementById("chatList");
 
 
-/* =========================
+/* =========================================================
    SIDEBAR
-========================= */
+   ========================================================= */
 
 function openSidebar() {
   sidebar.classList.add("open");
   overlay.classList.add("show");
+
   document.body.style.overflow = "hidden";
 }
 
 function closeSidebar() {
   sidebar.classList.remove("open");
   overlay.classList.remove("show");
+
   document.body.style.overflow = "";
 }
 
-menuButton.addEventListener("click", openSidebar);
-overlay.addEventListener("click", closeSidebar);
+menuButton?.addEventListener("click", openSidebar);
+overlay?.addEventListener("click", closeSidebar);
 
 
-/* =========================
+/* =========================================================
    NEW CHAT
-========================= */
+   ========================================================= */
 
-newChatButton.addEventListener("click", () => {
+newChatButton?.addEventListener("click", () => {
 
   messages.innerHTML = `
-    <div class="welcome">
+    <div class="welcome" id="welcome">
+
       <div class="welcome-content">
 
         <div class="welcome-logo">
@@ -51,35 +59,93 @@ newChatButton.addEventListener("click", () => {
           أنا <span>وسيم</span>
         </h1>
 
-        <p>
-          مساعدك الذكي للكتابة، التفكير، المعرفة، والإبداع.
-          <br>
-          ابدأ محادثة جديدة، ودع وسيم يرافقك.
+        <p class="welcome-subtitle">
+          رفيقك الأدبي في عالم الكتابة.
         </p>
 
+        <p class="welcome-description">
+          اكتب قصيدتك، ابنِ روايتك، طوّر شخصياتك،
+          أو أحضر نصك وسأقرأه معك.
+        </p>
+
+        <div class="quick-actions">
+
+          <button class="quick-action" data-prompt="اكتب لي قصيدة عن">
+            <span>🪶</span>
+            <strong>اكتب قصيدة</strong>
+            <small>شعر وصور وإيقاع</small>
+          </button>
+
+          <button class="quick-action" data-prompt="ساعدني في بناء رواية عن">
+            <span>📖</span>
+            <strong>ابنِ رواية</strong>
+            <small>فكرة وحبكة وشخصيات</small>
+          </button>
+
+          <button class="quick-action" data-prompt="ساعدني في كتابة نص أدبي عن">
+            <span>✒️</span>
+            <strong>اكتب نصًا</strong>
+            <small>أدب وخاطرة وقصة</small>
+          </button>
+
+          <button class="quick-action" data-prompt="حلّل هذا النص أدبيًا:">
+            <span>🔍</span>
+            <strong>حلّل نصي</strong>
+            <small>نقد وتحسين وتحرير</small>
+          </button>
+
+        </div>
+
       </div>
+
     </div>
   `;
 
   currentChat.textContent = "Wassim AI";
 
-  document
-    .querySelectorAll(".chat")
-    .forEach(chat => chat.classList.remove("active"));
+  document.querySelectorAll(".chat").forEach(chat => {
+    chat.classList.remove("active");
+  });
 
   messageInput.value = "";
 
   closeSidebar();
 
-  setTimeout(() => {
-    messageInput.focus();
-  }, 200);
+  attachQuickActions();
+
+  messageInput.focus();
 });
 
 
-/* =========================
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+function attachQuickActions() {
+
+  document.querySelectorAll(".quick-action").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      const prompt = button.dataset.prompt;
+
+      messageInput.value = prompt;
+
+      messageInput.focus();
+
+      autoResizeInput();
+    });
+
+  });
+
+}
+
+attachQuickActions();
+
+
+/* =========================================================
    SEND MESSAGE
-========================= */
+   ========================================================= */
 
 function sendMessage() {
 
@@ -87,29 +153,31 @@ function sendMessage() {
 
   if (!text) return;
 
-
-  const welcome = document.querySelector(".welcome");
+  const welcome = document.getElementById("welcome");
 
   if (welcome) {
     welcome.remove();
   }
 
-
   addMessage("user", text);
 
   messageInput.value = "";
 
+  autoResizeInput();
+
   scrollToBottom();
 
-
-  /* رد مؤقت إلى أن نربط الـAI */
+  /*
+   * مؤقتًا:
+   * هذه مجرد شخصية تجريبية للواجهة.
+   * لاحقًا سنربطها بالمحرك الأدبي الحقيقي.
+   */
 
   setTimeout(() => {
 
     addMessage(
       "ai",
-      "أنا هنا. ✨<br><br>" +
-      "هذه الواجهة أصبحت جاهزة، والخطوة القادمة هي ربطها بعقل Wassim AI الحقيقي."
+      generateLiteraryDemoResponse(text)
     );
 
     scrollToBottom();
@@ -118,75 +186,116 @@ function sendMessage() {
 }
 
 
-/* =========================
-   ADD MESSAGE
-========================= */
+/* =========================================================
+   LITERARY DEMO BRAIN
+   ========================================================= */
 
-function addMessage(type, text) {
+function generateLiteraryDemoResponse(text) {
 
-  const message = document.createElement("div");
+  const lower = text.toLowerCase();
 
-  message.className = "message";
+  if (
+    text.includes("قصيدة") ||
+    text.includes("شعر") ||
+    text.includes("شاعر")
+  ) {
 
-
-  if (type === "user") {
-
-    message.innerHTML = `
-      <div class="message-avatar user-avatar">
-        W
-      </div>
-
-      <div class="message-content">
-
-        <div class="message-name">
-          أنت
-        </div>
-
-        <div>
-          ${escapeHTML(text)}
-        </div>
-
-      </div>
-    `;
-
-  } else {
-
-    message.innerHTML = `
-      <div class="message-avatar ai-avatar">
-        W
-      </div>
-
-      <div class="message-content">
-
-        <div class="message-name">
-          Wassim AI
-        </div>
-
-        <div>
-          ${text}
-        </div>
-
-      </div>
+    return `
+      <strong>🪶 لنكتبها معًا.</strong>
+      <br><br>
+      أخبرني فقط عن الفكرة أو الشعور الذي تريد أن تدور حوله القصيدة،
+      وسأساعدك في بناء النص والصور والقافية والأسلوب.
     `;
   }
 
 
-  messages.appendChild(message);
+  if (
+    text.includes("رواية") ||
+    text.includes("روايت") ||
+    text.includes("قصة")
+  ) {
+
+    return `
+      <strong>📖 فكرة الرواية هي البداية فقط.</strong>
+      <br><br>
+      أعطني الفكرة التي لديك، حتى لو كانت سطرًا واحدًا،
+      وسنحوّلها إلى عالم وشخصيات وصراع وحبكة مترابطة.
+    `;
+  }
+
+
+  if (
+    text.includes("حلل") ||
+    text.includes("حلّل") ||
+    text.includes("نقد")
+  ) {
+
+    return `
+      <strong>🔍 سأقرأ النص ككاتب وناقد.</strong>
+      <br><br>
+      أرسل النص، وسأفصل بين نقاط القوة والمشكلات الفعلية،
+      ثم أقترح تعديلات تحافظ على صوتك أنت.
+    `;
+  }
+
+
+  if (
+    text.includes("اكتب") ||
+    text.includes("نص")
+  ) {
+
+    return `
+      <strong>✒️ لنبدأ من الفكرة.</strong>
+      <br><br>
+      أعطني الموضوع، الشعور، المشهد أو حتى جملة واحدة،
+      وسأساعدك على تحويلها إلى نص أدبي متماسك.
+    `;
+  }
+
+
+  return `
+    <strong>أفهمك.</strong>
+    <br><br>
+    أنا Wassim AI، مساعدك المتخصص في الأدب والكتابة.
+    يمكننا العمل على الشعر، الروايات، القصص، الشخصيات،
+    الأسلوب، النقد والتحرير.
+    <br><br>
+    اكتب فكرتك كما هي، حتى لو لم تكن مكتملة.
+  `;
 }
 
 
-/* =========================
-   SEND BUTTON
-========================= */
+/* =========================================================
+   ADD MESSAGE
+   ========================================================= */
 
-sendButton.addEventListener("click", sendMessage);
+function addMessage(type, text) {
+
+  const wrapper = document.createElement("div");
+
+  wrapper.className = `message ${type}`;
+
+  wrapper.innerHTML = `
+    <div class="message-avatar">
+      ${type === "user" ? "W" : "W"}
+    </div>
+
+    <div class="message-content">
+      ${type === "user" ? escapeHTML(text) : text}
+    </div>
+  `;
+
+  messages.appendChild(wrapper);
+}
 
 
-/* =========================
-   ENTER
-========================= */
+/* =========================================================
+   SEND EVENTS
+   ========================================================= */
 
-messageInput.addEventListener("keydown", event => {
+sendButton?.addEventListener("click", sendMessage);
+
+messageInput?.addEventListener("keydown", (event) => {
 
   if (
     event.key === "Enter" &&
@@ -201,58 +310,67 @@ messageInput.addEventListener("keydown", event => {
 });
 
 
-/* =========================
-   SEARCH
-========================= */
+/* =========================================================
+   AUTO RESIZE
+   ========================================================= */
 
-searchInput.addEventListener("input", () => {
+function autoResizeInput() {
+
+  messageInput.style.height = "auto";
+
+  messageInput.style.height =
+    Math.min(messageInput.scrollHeight, 120) + "px";
+}
+
+messageInput?.addEventListener(
+  "input",
+  autoResizeInput
+);
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+searchInput?.addEventListener("input", () => {
 
   const query =
     searchInput.value
       .trim()
       .toLowerCase();
 
-  document
-    .querySelectorAll(".chat")
-    .forEach(chat => {
+  document.querySelectorAll(".chat").forEach(chat => {
 
-      const title =
-        chat
-          .querySelector(".chat-title")
-          ?.textContent
-          .toLowerCase() || "";
+    const title =
+      chat.querySelector(".chat-title")
+        ?.textContent
+        .toLowerCase() || "";
 
-      const preview =
-        chat
-          .querySelector(".chat-preview")
-          ?.textContent
-          .toLowerCase() || "";
+    const preview =
+      chat.querySelector(".chat-preview")
+        ?.textContent
+        .toLowerCase() || "";
 
-      const visible =
-        title.includes(query) ||
-        preview.includes(query);
-
-      chat.style.display =
-        visible ? "flex" : "none";
-
-    });
+    chat.style.display =
+      !query ||
+      title.includes(query) ||
+      preview.includes(query)
+        ? ""
+        : "none";
+  });
 
 });
 
 
-/* =========================
-   SELECT CHAT
-========================= */
+/* =========================================================
+   CHAT SELECTION
+   ========================================================= */
 
-chatList.addEventListener("click", event => {
+chatList?.addEventListener("click", (event) => {
 
-  const chat =
-    event.target.closest(".chat");
+  const chat = event.target.closest(".chat");
 
   if (!chat) return;
-
-
-  /* لا نفتح المحادثة عند الضغط على ⋮ */
 
   if (
     event.target.closest(".chat-menu")
@@ -260,61 +378,50 @@ chatList.addEventListener("click", event => {
     return;
   }
 
-
   document
     .querySelectorAll(".chat")
     .forEach(item => {
       item.classList.remove("active");
     });
 
-
   chat.classList.add("active");
 
-
   const title =
-    chat
-      .querySelector(".chat-title")
+    chat.querySelector(".chat-title")
       ?.textContent
       .trim();
-
 
   if (title) {
     currentChat.textContent = title;
   }
 
-
   closeSidebar();
 });
 
 
-/* =========================
+/* =========================================================
    SCROLL
-========================= */
+   ========================================================= */
 
 function scrollToBottom() {
 
-  const area =
-    document.querySelector(".messages");
-
-  requestAnimationFrame(() => {
-
-    area.scrollTop =
-      area.scrollHeight;
-
+  messages.scrollTo({
+    top: messages.scrollHeight,
+    behavior: "smooth"
   });
+
 }
 
 
-/* =========================
+/* =========================================================
    SECURITY
-========================= */
+   ========================================================= */
 
-function escapeHTML(text) {
+function escapeHTML(value) {
 
-  const element =
-    document.createElement("div");
+  const div = document.createElement("div");
 
-  element.textContent = text;
+  div.textContent = value;
 
-  return element.innerHTML;
-       }
+  return div.innerHTML;
+}
