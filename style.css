@@ -1,30 +1,18 @@
-/* =========================================================
-   WASSIM AI — RESPONSIVE BLACK & GOLD
-   ========================================================= */
-
 :root {
-  --black: #030304;
-  --black-2: #07070a;
-  --panel: #0c0c10;
-  --panel-2: #111116;
-
+  --black: #050506;
+  --black-2: #09090c;
+  --panel: #0e0e12;
   --gold: #d4af37;
   --gold-light: #f5d76e;
-  --gold-bright: #ffe58a;
-
   --text: #ffffff;
-  --muted: #a5a3a8;
-  --muted-2: #77757b;
-
-  --border: rgba(212, 175, 55, 0.16);
-
+  --muted: #aaa9ae;
+  --border: rgba(212,175,55,.16);
   --sidebar-width: 285px;
 }
 
-
-/* =========================================================
+/* =========================
    RESET
-   ========================================================= */
+========================= */
 
 * {
   box-sizing: border-box;
@@ -41,89 +29,74 @@ body {
 body {
   background: var(--black);
   color: var(--text);
-
-  font-family:
-    "Inter",
-    "Segoe UI",
-    Arial,
-    sans-serif;
-
+  font-family: Arial, "Segoe UI", sans-serif;
   overflow: hidden;
 }
 
-
-/* =========================================================
+/* =========================
    GOLD LIGHT
-   ========================================================= */
+========================= */
 
 body::before {
   content: "";
-
   position: fixed;
 
-  width: 45vw;
-  height: 45vw;
+  width: 420px;
+  height: 420px;
 
-  min-width: 260px;
-  min-height: 260px;
-
-  max-width: 600px;
-  max-height: 600px;
-
-  top: -20%;
-  left: -10%;
+  top: -180px;
+  left: -150px;
 
   background:
     radial-gradient(
       circle,
-      rgba(212, 175, 55, 0.12),
+      rgba(212,175,55,.13),
       transparent 70%
     );
 
-  filter: blur(35px);
+  filter: blur(30px);
 
   pointer-events: none;
+  z-index: 0;
 
-  animation: goldMove 16s ease-in-out infinite alternate;
+  animation: moveLight 14s ease-in-out infinite alternate;
 }
 
-@keyframes goldMove {
-
+@keyframes moveLight {
   0% {
-    transform: translate(0, 0);
+    transform: translate(0,0);
   }
 
   50% {
-    transform: translate(45vw, 35vh);
+    transform: translate(45vw,35vh);
   }
 
   100% {
-    transform: translate(75vw, -5vh);
+    transform: translate(75vw,-5vh);
   }
 }
 
-
-/* =========================================================
+/* =========================
    APP
-   ========================================================= */
+========================= */
 
 .app {
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   display: flex;
 
   position: relative;
+  z-index: 1;
 }
 
-
-/* =========================================================
+/* =========================
    SIDEBAR
-   ========================================================= */
+========================= */
 
 .sidebar {
   width: var(--sidebar-width);
-  height: 100%;
+  height: 100vh;
 
   flex-shrink: 0;
 
@@ -140,16 +113,10 @@ body::before {
   border-right: 1px solid var(--border);
 
   position: relative;
-
   z-index: 100;
 
   transition: transform .3s ease;
 }
-
-
-/* =========================================================
-   SIDEBAR HEADER
-   ========================================================= */
 
 .sidebar-header {
   padding: 18px;
@@ -182,7 +149,7 @@ body::before {
   background:
     linear-gradient(
       135deg,
-      var(--gold-bright),
+      var(--gold-light),
       var(--gold)
     );
 
@@ -191,20 +158,19 @@ body::before {
   font-weight: 900;
 
   box-shadow:
-    0 0 22px rgba(212,175,55,.25);
+    0 0 20px rgba(212,175,55,.25);
 }
 
-
-/* =========================================================
+/* =========================
    NEW CHAT
-   ========================================================= */
+========================= */
 
 .new-chat {
   width: calc(100% - 32px);
 
-  margin: 0 16px 15px;
+  height: 45px;
 
-  min-height: 45px;
+  margin: 0 16px 15px;
 
   border: 1px solid rgba(212,175,55,.3);
 
@@ -215,12 +181,9 @@ body::before {
 
   color: var(--gold-light);
 
-  font-size: 14px;
   font-weight: 700;
 
   cursor: pointer;
-
-  transition: .2s ease;
 }
 
 .new-chat:hover {
@@ -228,15 +191,11 @@ body::before {
     rgba(212,175,55,.16);
 
   border-color: var(--gold);
-
-  box-shadow:
-    0 0 22px rgba(212,175,55,.12);
 }
 
-
-/* =========================================================
+/* =========================
    SEARCH
-   ========================================================= */
+========================= */
 
 .search-box {
   padding: 0 16px 14px;
@@ -248,8 +207,7 @@ body::before {
 
   padding: 0 13px;
 
-  border:
-    1px solid rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.07);
 
   border-radius: 11px;
 
@@ -266,14 +224,12 @@ body::before {
     rgba(212,175,55,.55);
 }
 
-
-/* =========================================================
+/* =========================
    CHAT LIST
-   ========================================================= */
+========================= */
 
 .chat-list {
   flex: 1;
-
   min-height: 0;
 
   overflow-y: auto;
@@ -296,8 +252,6 @@ body::before {
   border-radius: 12px;
 
   cursor: pointer;
-
-  transition: .2s ease;
 }
 
 .chat:hover {
@@ -307,7 +261,7 @@ body::before {
 
 .chat.active {
   background:
-    rgba(212,175,55,.10);
+    rgba(212,175,55,.1);
 
   border-right:
     2px solid var(--gold);
@@ -340,30 +294,25 @@ body::before {
   font-weight: 600;
 
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
 .chat-preview {
   margin-top: 4px;
 
-  color: var(--muted-2);
+  color: var(--muted);
 
   font-size: 11px;
 
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
-
-/* =========================================================
-   SIDEBAR FOOTER
-   ========================================================= */
+/* =========================
+   FOOTER
+========================= */
 
 .sidebar-footer {
   padding: 14px;
@@ -390,7 +339,7 @@ body::before {
   background:
     linear-gradient(
       135deg,
-      var(--gold-bright),
+      var(--gold-light),
       var(--gold)
     );
 
@@ -401,20 +350,17 @@ body::before {
 
 .user-info strong {
   display: block;
-
   font-size: 13px;
 }
 
 .user-info small {
-  color: var(--muted-2);
-
+  color: var(--muted);
   font-size: 11px;
 }
 
-
-/* =========================================================
+/* =========================
    MAIN
-   ========================================================= */
+========================= */
 
 .main {
   flex: 1;
@@ -422,7 +368,7 @@ body::before {
   min-width: 0;
   min-height: 0;
 
-  height: 100%;
+  height: 100vh;
 
   display: flex;
   flex-direction: column;
@@ -432,29 +378,26 @@ body::before {
   overflow: hidden;
 }
 
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
+/* =========================
+   TOPBAR
+========================= */
 
 .topbar {
-  flex: 0 0 auto;
-
+  height: 60px;
   min-height: 60px;
 
-  padding:
-    0 clamp(14px, 3vw, 28px);
+  padding: 0 22px;
 
   display: flex;
   align-items: center;
 
   border-bottom:
-    1px solid rgba(255,255,255,.045);
+    1px solid rgba(255,255,255,.05);
 
   background:
-    rgba(5,5,7,.7);
+    rgba(5,5,7,.75);
 
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(15px);
 
   z-index: 20;
 }
@@ -472,22 +415,19 @@ body::before {
 
   margin-left: auto;
 
-  border:
-    1px solid rgba(212,175,55,.2);
+  border: 1px solid rgba(212,175,55,.2);
 
   border-radius: 11px;
 
   background:
     rgba(212,175,55,.06);
 
-  color:
-    var(--gold-light);
+  color: var(--gold-light);
 }
 
-
-/* =========================================================
-   CONTENT AREA
-   ========================================================= */
+/* =========================
+   MESSAGES
+========================= */
 
 .messages {
   flex: 1;
@@ -496,139 +436,111 @@ body::before {
 
   overflow-y: auto;
 
-  display: flex;
-  flex-direction: column;
-
-  padding:
-    clamp(15px, 3vh, 35px)
-    clamp(14px, 4vw, 35px);
+  padding: 20px;
 
   /*
-     مهم جدًا:
-     الـ padding السفلي يتغير حسب مساحة الشاشة
-     بدل قيمة ثابتة ضخمة.
+    المساحة السفلية تضمن أن آخر رسالة
+    لا تختبئ خلف شريط الكتابة.
   */
+  padding-bottom: 145px;
+
+  display: flex;
+  flex-direction: column;
 }
 
-
-/* =========================================================
+/* =========================
    WELCOME
-   ========================================================= */
+========================= */
 
 .welcome {
   width: 100%;
-
   max-width: 720px;
 
-  margin:
-    auto;
+  margin: auto;
 
-  padding:
-    clamp(10px, 2vh, 24px);
+  padding: 20px;
 
   text-align: center;
-
-  /*
-     لا يوجد translateY
-     لا يوجد position absolute
-     Flex هو الذي يحدد المكان.
-  */
 }
 
 .welcome-logo {
-  width:
-    clamp(58px, 9vw, 78px);
+  width: 72px;
+  height: 72px;
 
-  height:
-    clamp(58px, 9vw, 78px);
-
-  margin:
-    0 auto clamp(15px, 2.5vh, 24px);
+  margin: 0 auto 22px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius:
-    clamp(17px, 2vw, 23px);
+  border-radius: 22px;
 
   background:
     linear-gradient(
       135deg,
-      var(--gold-bright),
+      var(--gold-light),
       var(--gold)
     );
 
   color: #050505;
 
-  font-size:
-    clamp(27px, 4vw, 35px);
-
+  font-size: 32px;
   font-weight: 900;
 
   box-shadow:
-    0 0 35px rgba(212,175,55,.22);
+    0 0 35px rgba(212,175,55,.25);
 
   animation:
-    logoPulse 3.5s ease-in-out infinite;
+    pulseGold 3s ease-in-out infinite;
 }
 
-@keyframes logoPulse {
+@keyframes pulseGold {
 
   0%,
   100% {
     box-shadow:
-      0 0 28px rgba(212,175,55,.18);
+      0 0 25px rgba(212,175,55,.18);
   }
 
   50% {
     box-shadow:
-      0 0 48px rgba(212,175,55,.32);
+      0 0 45px rgba(212,175,55,.35);
   }
 }
 
 .welcome h1 {
-  font-size:
-    clamp(24px, 4vw, 38px);
+  font-size: clamp(25px, 4vw, 38px);
 
   line-height: 1.3;
 
-  margin-bottom:
-    clamp(8px, 1.5vh, 15px);
+  margin-bottom: 12px;
 }
 
 .welcome h1 span {
   color: var(--gold-light);
-
-  text-shadow:
-    0 0 20px rgba(212,175,55,.15);
 }
 
 .welcome p {
-  max-width: 610px;
+  max-width: 600px;
 
   margin: auto;
 
   color: var(--muted);
 
-  font-size:
-    clamp(12px, 1.7vw, 15px);
+  font-size: 14px;
 
   line-height: 1.8;
 }
 
-
-/* =========================================================
+/* =========================
    MESSAGES
-   ========================================================= */
+========================= */
 
 .message {
   width: 100%;
-
   max-width: 850px;
 
-  margin:
-    0 auto 18px;
+  margin: 0 auto 18px;
 
   display: flex;
 }
@@ -642,17 +554,13 @@ body::before {
 }
 
 .message-bubble {
-  max-width:
-    min(78%, 680px);
+  max-width: min(78%, 680px);
 
-  padding:
-    12px 16px;
+  padding: 12px 16px;
 
-  border-radius:
-    16px;
+  border-radius: 16px;
 
-  font-size:
-    clamp(13px, 1.6vw, 14px);
+  font-size: 14px;
 
   line-height: 1.75;
 }
@@ -677,40 +585,39 @@ body::before {
   border-bottom-left-radius: 5px;
 }
 
-
-/* =========================================================
+/* =========================
    COMPOSER
-   ========================================================= */
+========================= */
 
 .composer {
-  flex: 0 0 auto;
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
 
   width: 100%;
 
   padding:
-    clamp(10px, 2vh, 18px)
-    clamp(12px, 3vw, 30px)
-    clamp(10px, 1.5vh, 17px);
+    16px 20px 14px;
 
   background:
     linear-gradient(
       to top,
-      var(--black) 70%,
-      rgba(3,3,4,.92) 85%,
+      var(--black) 60%,
+      rgba(5,5,6,.95) 80%,
       transparent
     );
 
-  z-index: 15;
+  z-index: 30;
 }
 
-
-/* =========================================================
+/* =========================
    INPUT
-   ========================================================= */
+========================= */
 
 .input-box {
   width: 100%;
-
   max-width: 780px;
 
   min-height: 56px;
@@ -741,7 +648,7 @@ body::before {
     rgba(212,175,55,.55);
 
   box-shadow:
-    0 0 30px rgba(212,175,55,.07);
+    0 0 30px rgba(212,175,55,.08);
 }
 
 #messageInput {
@@ -750,13 +657,11 @@ body::before {
   min-width: 0;
 
   min-height: 40px;
-
-  max-height: 140px;
+  max-height: 130px;
 
   resize: none;
 
   border: none;
-
   outline: none;
 
   background: transparent;
@@ -765,31 +670,24 @@ body::before {
 
   font-family: inherit;
 
-  font-size:
-    clamp(13px, 1.8vw, 14px);
+  font-size: 14px;
 
   line-height: 1.6;
 
-  padding:
-    8px 0;
+  padding: 8px 0;
 }
 
 #messageInput::placeholder {
-  color:
-    var(--muted-2);
+  color: #77757b;
 }
 
-
-/* =========================================================
+/* =========================
    SEND
-   ========================================================= */
+========================= */
 
 #sendButton {
-  width:
-    clamp(40px, 6vw, 44px);
-
-  height:
-    clamp(40px, 6vw, 44px);
+  width: 43px;
+  height: 43px;
 
   flex-shrink: 0;
 
@@ -800,12 +698,11 @@ body::before {
   background:
     linear-gradient(
       135deg,
-      var(--gold-bright),
+      var(--gold-light),
       var(--gold)
     );
 
-  color:
-    #050505;
+  color: #050505;
 
   font-size: 17px;
 
@@ -818,35 +715,29 @@ body::before {
   transform: translateY(-2px);
 
   box-shadow:
-    0 0 25px rgba(212,175,55,.25);
+    0 0 25px rgba(212,175,55,.3);
 }
 
-
-/* =========================================================
+/* =========================
    DISCLAIMER
-   ========================================================= */
+========================= */
 
 .disclaimer {
   width: 100%;
-
   max-width: 780px;
 
-  margin:
-    clamp(5px, 1vh, 9px) auto 0;
+  margin: 7px auto 0;
 
   text-align: center;
 
-  color:
-    #5f5d63;
+  color: #626066;
 
-  font-size:
-    clamp(8px, 1.4vw, 10px);
+  font-size: 10px;
 }
 
-
-/* =========================================================
+/* =========================
    OVERLAY
-   ========================================================= */
+========================= */
 
 .overlay {
   display: none;
@@ -858,8 +749,7 @@ body::before {
   background:
     rgba(0,0,0,.65);
 
-  backdrop-filter:
-    blur(3px);
+  backdrop-filter: blur(3px);
 
   z-index: 90;
 }
@@ -868,10 +758,9 @@ body::before {
   display: block;
 }
 
-
 /* =========================================================
    MOBILE
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 760px) {
 
@@ -881,10 +770,8 @@ body::before {
     top: 0;
     right: 0;
 
-    width:
-      min(86vw, 320px);
-
-    height: 100%;
+    width: min(86vw, 320px);
+    height: 100vh;
 
     transform:
       translateX(105%);
@@ -903,83 +790,122 @@ body::before {
   }
 
   .topbar {
-    min-height:
-      clamp(54px, 8vh, 64px);
-  }
+    height: 56px;
+    min-height: 56px;
 
-  /*
-     هنا أيضًا لا نستخدم ارتفاعًا ثابتًا.
-     الـ composer يأخذ فقط المساحة التي يحتاجها.
-  */
+    padding: 0 14px;
+  }
 
   .messages {
     padding:
-      clamp(12px, 2.5vh, 25px)
-      clamp(10px, 4vw, 20px);
+      15px 12px 135px;
   }
 
   .welcome {
-    padding:
-      clamp(5px, 1.5vh, 15px);
+    padding: 10px;
+
+    /*
+      مهم:
+      لا translateY
+      لا position absolute
+      لا ارتفاع ثابت
+    */
   }
 
-  .message-bubble {
-    max-width:
-      88%;
+  .welcome-logo {
+    width: 64px;
+    height: 64px;
+
+    margin-bottom: 17px;
+
+    border-radius: 19px;
+
+    font-size: 28px;
+  }
+
+  .welcome h1 {
+    font-size: 27px;
+  }
+
+  .welcome p {
+    max-width: 350px;
+
+    font-size: 13px;
   }
 
   .composer {
     padding:
-      clamp(8px, 1.8vh, 15px)
-      clamp(9px, 3vw, 16px)
-      clamp(8px, 1.5vh, 13px);
+      10px 10px 9px;
   }
 
+  .input-box {
+    min-height: 54px;
+
+    border-radius: 16px;
+  }
+
+  #sendButton {
+    width: 41px;
+    height: 41px;
+  }
+
+  .disclaimer {
+    font-size: 9px;
+
+    margin-top: 5px;
+  }
+
+  .message-bubble {
+    max-width: 88%;
+
+    font-size: 13px;
+  }
 }
 
-
 /* =========================================================
-   VERY SHORT PHONES
-   ========================================================= */
+   SHORT PHONES
+========================================================= */
 
-@media (max-height: 650px) and (max-width: 760px) {
+@media (max-width: 760px) and (max-height: 680px) {
 
   .topbar {
+    height: 50px;
     min-height: 50px;
   }
 
-  .welcome {
-    padding: 4px;
+  .messages {
+    padding-top: 8px;
+    padding-bottom: 120px;
   }
 
   .welcome-logo {
     width: 52px;
     height: 52px;
 
-    margin-bottom: 10px;
+    margin-bottom: 9px;
 
-    font-size: 24px;
+    font-size: 23px;
   }
 
   .welcome h1 {
     font-size: 23px;
 
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
   .welcome p {
     font-size: 11px;
 
-    line-height: 1.55;
+    line-height: 1.5;
   }
 
   .composer {
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding:
+      6px 8px;
   }
 
   .input-box {
-    min-height: 50px;
+    min-height: 48px;
   }
 
   .disclaimer {
@@ -987,16 +913,15 @@ body::before {
   }
 }
 
-
 /* =========================================================
    VERY TALL PHONES
-   ========================================================= */
+========================================================= */
 
-@media (min-height: 850px) and (max-width: 760px) {
+@media (max-width: 760px) and (min-height: 800px) {
 
   .welcome-logo {
-    width: 72px;
-    height: 72px;
+    width: 70px;
+    height: 70px;
   }
 
   .welcome h1 {
@@ -1008,10 +933,9 @@ body::before {
   }
 }
 
-
 /* =========================================================
    SMALL WIDTH
-   ========================================================= */
+========================================================= */
 
 @media (max-width: 360px) {
 
@@ -1024,8 +948,6 @@ body::before {
   }
 
   .input-box {
-    border-radius: 15px;
-
     padding-left: 11px;
   }
 
@@ -1035,27 +957,9 @@ body::before {
   }
 }
 
-
-/* =========================================================
-   LARGE SCREENS
-   ========================================================= */
-
-@media (min-width: 1100px) {
-
-  .welcome {
-    max-width: 780px;
-  }
-
-  .messages {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-}
-
-
 /* =========================================================
    REDUCED MOTION
-   ========================================================= */
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1063,9 +967,6 @@ body::before {
   *::before,
   *::after {
     animation: none !important;
-
     transition: none !important;
-
-    scroll-behavior: auto !important;
   }
-     }
+   }
